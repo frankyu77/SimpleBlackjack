@@ -3,17 +3,32 @@ package model;
 import java.util.List;
 
 public class Dealer {
-    private List<String> dealerCards;
+    private List<Card> dealerCards;
+    private int value;
 
-    public Dealer(List<String> dealerHand) {
+    public Dealer(List<Card> dealerHand) {
         this.dealerCards = dealerHand;
     }
 
-    public int dealerCount() {
-        return 0;
+    public int getValue() {
+        value = 0;
+        for (int i = 0; i < dealerCards.size(); i++) {
+            value += dealerCards.get(i).getCardValue();
+        }
+
+        return value;
     }
 
-    public List<String> getDealerHand() {
+    public List<Card> dealerHits(int numberOfTimesHit, DeckOfCards deck) {
+        this.dealerCards.add(deck.getCard(numberOfTimesHit));
+        return dealerCards;
+    }
+
+    public int getSize() {
+        return this.dealerCards.size();
+    }
+
+    public List<Card> getDealerHand() {
         return dealerCards;
     }
 }

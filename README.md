@@ -21,8 +21,6 @@ they bet as well. If you get a *Black Jack*, you get paid 150% of the value that
 thing to keep in mind is that the dealer will never give themselves cards if their total card 
 value is 17 or more. 
 
-You also have the option of hitting, standing, splitting, and doubling down in the game. 
-
 #### Value of each card:
 *2-10*: Face value
 
@@ -45,10 +43,6 @@ essentially lead me to wanting to design a game similar to that.
 - As a user, I want to be able to see the cards dealt to other players and myself, as well as the dealer
 - As a user, I want to be able to see the amount of money I have 
 - As a user, I want to be able to see the amount of money other people and I are betting
-- As a user, I want to be able to choose whether I want to play alone or with bots
-- As a user, I want to be able to see the total amount of money that I made and the total amount of money I lost
-- As a user, I want to be able to choose whether I want to hit, split, double down, or stand
+- As a user, I want to be able to choose whether I want to hit or stay
 - As a user, I want to be able to see the instructions on how to play the game
-- As a user, I want to have the option of leaving the game whenever and keeping the amount of money earned
 - As a user, I want to be able to restart the game and reset the amount of money I earned to 0
-- As a user, I want to be able to store some of the money earned into a savings account

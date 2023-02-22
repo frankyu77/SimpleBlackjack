@@ -1,25 +1,34 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-
 public class DeckOfCards {
-    private static List<String> cards = new ArrayList<>();
+    private static List<Card> cards;
 
     public DeckOfCards() {
-        cards = Arrays.asList("A", "9", "3", "5", "Q", "7", "6", "2", "8", "3", "A");
+        cards = new ArrayList<Card>();
     }
 
-    public String getCards() {
-        for (int i = 0; i < cards.size(); i++) {
-            System.out.print(cards.get(i) + " ");
-        }
-        return "empty";
+    public List<Card> addCard(Card card) {
+        cards.add(card);
+        return this.cards;
     }
 
-    public static List<String> getDeck() {
-        return cards;
+    public int getSize() {
+        return cards.size();
     }
+
+    public Card getCard(int n) {
+        return cards.get(n);
+    }
+
+    public String getCardName(int n) {
+        return cards.get(n).getCardName();
+    }
+
+    public int getCardValue(int n) {
+        return cards.get(n).getCardValue();
+    }
+
 }
