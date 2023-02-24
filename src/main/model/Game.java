@@ -72,10 +72,14 @@ public class Game {
     }
 
     public boolean notEnoughCardsInDeck(int n, DeckOfCards deck) {
-        if (n >= deck.getSize()) {
+        if (n > deck.getSize()) {
             return true;
         }
         return false;
+    }
+
+    public DeckOfCards getDeck() {
+        return this.deck;
     }
 }
 

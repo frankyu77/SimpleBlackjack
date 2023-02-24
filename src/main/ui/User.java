@@ -155,10 +155,7 @@ public class User {
         double betStatement = printBetStatement(currentMoney);
         currentMoney = currentMoney - betStatement;
 
-        System.out.println("-----------------------------");
-        System.out.println("Current balance: " + currentMoney);
-        System.out.println("-----------------------------");
-        System.out.println("Amount bet: " + betStatement);
+        printAfterBet(betStatement);
 
         while (true) {
             Dealer d = new Dealer(dealerCard1);
@@ -177,6 +174,17 @@ public class User {
                 break;
             }
         }
+        playAgain();
+    }
+
+    private void printAfterBet(double betStatement) {
+        System.out.println("-----------------------------");
+        System.out.println("Amount bet: " + betStatement);
+        System.out.println("-----------------------------");
+        System.out.println("Current balance: " + currentMoney);
+    }
+
+    private void playAgain() {
         System.out.println("Do you want to play again?");
         Scanner response = new Scanner(System.in);
         String answer = response.nextLine();
@@ -205,29 +213,41 @@ public class User {
             if (game.playerGreaterThan21(p)) {
                 printDealerAndPlayerHand(playerCard1, dealerCard1, p, d, game, bet);
 
-                System.out.println("You Lose!");
-                currentMoney = p.playerMoney(LOSE, bet, currentMoney);
-                System.out.println("-----------------------------");
-                System.out.println("Current balance: " + currentMoney);
-                System.out.println("-----------------------------");
+                lostStatementWithMoneyLost(p, bet);
 
                 return true;
             }
         } else if (response.equals("stay")) {
-            while (d.getValue() <= 17) {
-                if (game.notEnoughCardsInDeck(numberOfTimesHit, completedDeck)) {
-                    System.out.println("Not enough cards in deck to continue the game :(");
-                    return true;
-                }
-                d.dealerHits(numberOfTimesHit, completedDeck);
-                numberOfTimesHit++;
+            if (dealersTurn(d, completedDeck)) {
+                return true;
             }
+            printDealerAndPlayerHand(playerCard1, dealerCard1, p, d, game, bet);
             handleMoney(p, d, bet);
             return true;
         } else {
             return true;
         }
         return false;
+    }
+
+    private boolean dealersTurn(Dealer d, DeckOfCards completedDeck) {
+        while (d.getValue() <= 17) {
+            if (game.notEnoughCardsInDeck(numberOfTimesHit, completedDeck)) {
+                System.out.println("Not enough cards in deck to continue the game :(");
+                return true;
+            }
+            d.dealerHits(numberOfTimesHit, completedDeck);
+            numberOfTimesHit++;
+        }
+        return false;
+    }
+
+    private void lostStatementWithMoneyLost(Player p, double bet) {
+        System.out.println("You Lose!");
+        currentMoney = p.playerMoney(LOSE, bet, currentMoney);
+        System.out.println("-----------------------------");
+        System.out.println("Current balance: " + currentMoney);
+        System.out.println("-----------------------------");
     }
 
     private boolean printDealerAndPlayerHand(List<Card> playerCards, List<Card> dealerCards, Player play, Dealer deal,

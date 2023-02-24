@@ -40,9 +40,8 @@ add to your server in discord that you could also play blackjack with and that
 essentially lead me to wanting to design a game similar to that. 
 
 ### User Stories
-- As a user, I want to be able to see the cards dealt to other players and myself, as well as the dealer
+- As a user, I want to be able to see the cards dealt to myself, as well as the dealer
 - As a user, I want to be able to see the amount of money I have 
-- As a user, I want to be able to see the amount of money other people and I are betting
 - As a user, I want to be able to choose whether I want to hit or stay
 - As a user, I want to be able to see the instructions on how to play the game
 - As a user, I want to be able to restart the game and reset the amount of money I earned to 0
