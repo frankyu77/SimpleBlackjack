@@ -10,10 +10,13 @@ public class Game {
     // all game related stuff
     private DeckOfCards deck;
 
+    // REQUIRES: cards.size() >= 4
+    // EFFECTS: creates game with the DeckOfCards inputted
     public Game(DeckOfCards cards) {
         this.deck = cards;
     }
 
+    // EFFECTS: prints out the first two cards for the player
     public List<Card> firstTwoPlayerCards() {
         List<Card> player1 = new ArrayList<>();
 
@@ -25,6 +28,7 @@ public class Game {
         return player1;
     }
 
+    // EFFECTS: prints out the first two cards for the dealer
     public List<Card> firstTwoDealerCards() {
         List<Card> dealer1 = new ArrayList<>();
 
@@ -36,6 +40,7 @@ public class Game {
         return dealer1;
     }
 
+    // EFFECTS: handles who will win, whether player win, lose, draw, or player hit blackjack, or dealer hit blackjack
     public int whoWins(Player player, Dealer dealer) {
         if (dealer.getValue() == player.getValue() || player.getSize() == 2 && player.getValue() == 21
                 && dealer.getSize() == 2 && dealer.getValue() == 21) {
@@ -57,6 +62,7 @@ public class Game {
         return -1;
     }
 
+    // EFFECTS: return true if player card values are greater than 21, else false
     public boolean playerGreaterThan21(Player player) {
         if (player.getValue() > 21) {
             return true;
@@ -64,6 +70,7 @@ public class Game {
         return false;
     }
 
+    // EFFECTS: return true if dealer card values are greater than 21, else false
     private boolean dealerGreaterThan21(Dealer dealer) {
         if (dealer.getValue() > 21) {
             return true;
@@ -71,6 +78,9 @@ public class Game {
         return false;
     }
 
+    // REQUIRES: n >= 0, deck.size() > 4
+    // EFFECTS: if the next card to be drawn is greater than the length of the deck (deck is too small), then return
+    //          true, else false
     public boolean notEnoughCardsInDeck(int n, DeckOfCards deck) {
         if (n > deck.getSize()) {
             return true;
@@ -78,6 +88,7 @@ public class Game {
         return false;
     }
 
+    // EFFECTS: returns the currents deck of the game
     public DeckOfCards getDeck() {
         return this.deck;
     }
