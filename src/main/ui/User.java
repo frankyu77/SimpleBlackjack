@@ -244,7 +244,7 @@ public class User {
                 return true;
             }
         } else if (response.equals("stay")) {
-            if (dealersTurn(d, completedDeck)) {
+            if (dealersTurn(d, completedDeck, bet)) {
                 return true;
             }
             printDealerAndPlayerHand(playerCard1, dealerCard1, p, d, game, bet);
@@ -260,10 +260,11 @@ public class User {
     // MODIFIES: this, numberOfTimesHit
     // EFFECTS: if dealers total card value is less than or equal to 17, then they will hit, if not enough cards in deck
     //          to continue, then end game
-    private boolean dealersTurn(Dealer d, DeckOfCards completedDeck) {
+    private boolean dealersTurn(Dealer d, DeckOfCards completedDeck, double bet) {
         while (d.getValue() <= 17) {
             if (game.notEnoughCardsInDeck(numberOfTimesHit, completedDeck)) {
                 System.out.println("Not enough cards in deck to continue the game :(");
+                currentMoney += bet;
                 return true;
             }
             d.dealerHits(numberOfTimesHit, completedDeck);
@@ -333,6 +334,17 @@ public class User {
     //          after
     private void handleMoney(Player player, Dealer dealer, double bet) {
         int w = game.whoWins(player, dealer);
+        if (w == DRAW) {
+            System.out.println("Draw!");
+        } else if (w == PBJ) {
+            System.out.println("You got a Black Jack!! You Win!");
+        } else if (w == DBJ) {
+            System.out.println("Dealer got a Black Jack. You Lose.");
+        } else if (w == LOSE) {
+            System.out.println("You Lose!");
+        } else if (w == WIN) {
+            System.out.println("You Win!");
+        }
         currentMoney = player.playerMoney(w, bet, currentMoney);
         System.out.println("-----------------------------");
         System.out.println("Current balance: " + currentMoney);

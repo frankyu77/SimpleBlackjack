@@ -23,7 +23,7 @@ public class DeckOfCards {
         return cards.size();
     }
 
-    // EFFECTS: returns the card at the fiven index
+    // EFFECTS: returns the card at the given index
     public Card getCard(int n) {
         return cards.get(n);
     }

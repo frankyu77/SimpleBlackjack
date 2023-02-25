@@ -44,19 +44,14 @@ public class Game {
     public int whoWins(Player player, Dealer dealer) {
         if (dealer.getValue() == player.getValue() || player.getSize() == 2 && player.getValue() == 21
                 && dealer.getSize() == 2 && dealer.getValue() == 21) {
-            System.out.println("Draw!");
             return DRAW;
         } else if (player.getSize() == 2 && player.getValue() == 21) {
-            System.out.println("You got a Black Jack!! You Win!");
             return PBJ;
         } else if (dealer.getSize() == 2 && dealer.getValue() == 21) {
-            System.out.println("Dealer got a Black Jack. You Lose.");
             return DBJ;
         } else if (playerGreaterThan21(player) || (dealer.getValue() > player.getValue() && dealer.getValue() <= 21)) {
-            System.out.println("You Lose!");
             return LOSE;
         } else if (dealerGreaterThan21(dealer) || player.getValue() > dealer.getValue()) {
-            System.out.println("You Win!");
             return WIN;
         }
         return -1;
@@ -82,7 +77,7 @@ public class Game {
     // EFFECTS: if the next card to be drawn is greater than the length of the deck (deck is too small), then return
     //          true, else false
     public boolean notEnoughCardsInDeck(int n, DeckOfCards deck) {
-        if (n > deck.getSize()) {
+        if (n >= deck.getSize()) {
             return true;
         }
         return false;
