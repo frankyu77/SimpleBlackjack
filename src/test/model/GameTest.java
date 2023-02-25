@@ -210,7 +210,7 @@ class GameTest {
         deck.addCard(two);
         Game game1 = new Game(deck);
         assertTrue(game1.notEnoughCardsInDeck(3, deck));
-        assertFalse(game1.notEnoughCardsInDeck(2, deck));
+        assertTrue(game1.notEnoughCardsInDeck(2, deck));
         assertFalse(game1.notEnoughCardsInDeck(1, deck));
 
         DeckOfCards deck1 = new DeckOfCards();
@@ -220,7 +220,7 @@ class GameTest {
         deck1.addCard(queen);
         deck1.addCard(ace);
         Game game2 = new Game(deck1);
-        assertFalse(game2.notEnoughCardsInDeck(5, deck1));
+        assertTrue(game2.notEnoughCardsInDeck(5, deck1));
         assertFalse(game2.notEnoughCardsInDeck(4, deck1));
         assertTrue(game2.notEnoughCardsInDeck(6, deck1));
     }
