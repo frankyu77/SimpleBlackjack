@@ -68,12 +68,15 @@ class PlayerTest {
         pc.add(two);
         pc.add(one);
         assertEquals(player.playerHits(4, deck), pc);
+        assertEquals(player.getValue(), 13);
 
         pc.add(four);
         assertEquals(player.playerHits(5, deck), pc);
+        assertEquals(player.getValue(), 17);
 
         pc.add(queen);
         assertEquals(player.playerHits(7, deck), pc);
+        assertEquals(player.getValue(), 27);
     }
 
     @Test
