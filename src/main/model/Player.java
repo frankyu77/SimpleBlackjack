@@ -51,12 +51,13 @@ public class Player {
         } else if (n == DRAW) {
             balance = current + amountBetted;
             return balance;
-        } else if (n == PBJ) {
+        } else {
+            //if (n == PBJ) {
             balance = current + amountBetted * 1.5;
             return balance;
         }
-        balance = current + amountBetted;
-        return balance;
+        //balance = current + amountBetted;
+        //return balance;
     }
 
     // EFFECTS: returns the balance of the player

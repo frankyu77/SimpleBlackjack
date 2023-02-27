@@ -7,7 +7,6 @@ import java.util.Scanner;
 
 public class User {
     private DeckOfCards deck1;
-    private Card card;
     private Game game;
     private int numberOfTimesHit = 3;
     private double currentMoney = 15;
@@ -17,6 +16,8 @@ public class User {
     public static final int DRAW = 2;
     public static final int PBJ = 3;
     public static final int DBJ = 4;
+
+    //testing testing testing
 
     // EFFECTS: creates a new DeckOfCards
     public User() {
@@ -83,7 +84,7 @@ public class User {
             Scanner value = new Scanner(System.in);
             int cardValue = value.nextInt();
 
-            card = new Card(cardName, cardValue);
+            Card card = new Card(cardName, cardValue);
             deck1.addCard(card);
             System.out.println("--------------------------------------------------------------------------");
             System.out.print("Deck so far: ");
@@ -291,8 +292,8 @@ public class User {
         System.out.println("--------------------------------------------------------------------------");
         System.out.print("Dealer: ");
         if (dealerCards.size() > 0) {
-            for (int i = 0; i < dealerCards.size(); i++) {
-                System.out.print(dealerCards.get(i).getCardName() + " ");
+            for (Card dealerCard : dealerCards) {
+                System.out.print(dealerCard.getCardName() + " ");
             }
         }
         int dealerValue = deal.getValue();
@@ -300,8 +301,8 @@ public class User {
 
         System.out.print("\nPlayer: ");
         if (playerCards.size() > 0) {
-            for (int i = 0; i < playerCards.size(); i++) {
-                System.out.print(playerCards.get(i).getCardName() + " ");
+            for (Card playerCard : playerCards) {
+                System.out.print(playerCard.getCardName() + " ");
             }
         }
         int playerValue = play.getValue();

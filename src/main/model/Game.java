@@ -51,10 +51,12 @@ public class Game {
             return DBJ;
         } else if (playerGreaterThan21(player) || (dealer.getValue() > player.getValue() && dealer.getValue() <= 21)) {
             return LOSE;
-        } else if (dealerGreaterThan21(dealer) || player.getValue() > dealer.getValue()) {
+        } else {
+            //else if (dealerGreaterThan21(dealer) || player.getValue() > dealer.getValue()) {
+
             return WIN;
         }
-        return -1;
+
     }
 
     // EFFECTS: return true if player card values are greater than 21, else false
