@@ -295,6 +295,21 @@ class GameTest {
     }
 
     @Test
+    void testDrawBothHaveTwoCards() {
+        List<Card> pc = new ArrayList<Card>();
+        pc.add(queen);
+        pc.add(two);
+        player = new Player(pc);
+
+        List<Card> dc = new ArrayList<Card>();
+        dc.add(king);
+        dc.add(two);
+        dealer = new Dealer(dc);
+
+        assertTrue(game.whoWins(player, dealer) == DRAW);
+    }
+
+    @Test
     void testDrawBothHitBJ() {
         List<Card> pc = new ArrayList<Card>();
         pc.add(queen);
