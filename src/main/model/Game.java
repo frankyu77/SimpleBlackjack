@@ -42,8 +42,8 @@ public class Game {
 
     // EFFECTS: handles who will win, whether player win, lose, draw, or player hit blackjack, or dealer hit blackjack
     public int whoWins(Player player, Dealer dealer) {
-        if (dealer.getValue() == player.getValue() || player.getSize() == 2 && player.getValue() == 21
-                && dealer.getSize() == 2 && dealer.getValue() == 21) {
+        if ((player.getSize() == 2 && player.getValue() == 21 && dealer.getSize() == 2 && dealer.getValue() == 21)
+                || (dealer.getValue() == player.getValue())) {
             return DRAW;
         } else if (player.getSize() == 2 && player.getValue() == 21) {
             return PBJ;
@@ -52,8 +52,6 @@ public class Game {
         } else if (playerGreaterThan21(player) || (dealer.getValue() > player.getValue() && dealer.getValue() <= 21)) {
             return LOSE;
         } else {
-            //else if (dealerGreaterThan21(dealer) || player.getValue() > dealer.getValue()) {
-
             return WIN;
         }
 
