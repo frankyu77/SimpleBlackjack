@@ -293,6 +293,21 @@ class GameTest {
 
         assertTrue(game.whoWins(player, dealer) == DRAW);
     }
+
+    @Test
+    void testDrawBothHitBJ() {
+        List<Card> pc = new ArrayList<Card>();
+        pc.add(queen);
+        pc.add(ace);
+        player = new Player(pc);
+
+        List<Card> dc = new ArrayList<Card>();
+        dc.add(king);
+        dc.add(ace);
+        dealer = new Dealer(dc);
+
+        assertTrue(game.whoWins(player, dealer) == DRAW);
+    }
     //------------------------------------------------------------------------------------------------------------------
     @Test
     void testPlayerGreaterThan21ByOne() {
@@ -351,6 +366,65 @@ class GameTest {
         player = new Player(pc);
 
         assertFalse(game.playerGreaterThan21(player));
+    }
+    //------------------------------------------------------------------------------------------------------------------
+    @Test
+    void testDealerGreaterThan21ByOne() {
+        List<Card> dc = new ArrayList<Card>();
+        dc.add(queen);
+        dc.add(four);
+        dc.add(three);
+        dc.add(seven);
+        dealer = new Dealer(dc);
+
+        assertTrue(game.dealerGreaterThan21(dealer));
+    }
+
+    @Test
+    void testDealerGreaterThan21ByALot() {
+        List<Card> dc = new ArrayList<Card>();
+        dc.add(queen);
+        dc.add(four);
+        dc.add(three);
+        dc.add(four);
+        dc.add(one);
+        dealer = new Dealer(dc);
+
+        assertTrue(game.dealerGreaterThan21(dealer));
+    }
+
+    @Test
+    void testDealerNotGreaterThan21ByOne() {
+        List<Card> dc = new ArrayList<Card>();
+        dc.add(queen);
+        dc.add(four);
+        dc.add(three);
+        dc.add(three);
+        dealer = new Dealer(dc);
+
+        assertFalse(game.dealerGreaterThan21(dealer));
+    }
+
+    @Test
+    void testDealerNotGreaterThan21ByALot() {
+        List<Card> dc = new ArrayList<Card>();
+        dc.add(queen);
+        dc.add(two);
+        dealer = new Dealer(dc);
+
+        assertFalse(game.dealerGreaterThan21(dealer));
+    }
+
+    @Test
+    void testDealerAt21() {
+        List<Card> dc = new ArrayList<Card>();
+        dc.add(queen);
+        dc.add(four);
+        dc.add(three);
+        dc.add(four);
+        dealer = new Dealer(dc);
+
+        assertFalse(game.dealerGreaterThan21(dealer));
     }
     //------------------------------------------------------------------------------------------------------------------
     @Test

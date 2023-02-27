@@ -68,7 +68,7 @@ public class Game {
     }
 
     // EFFECTS: return true if dealer card values are greater than 21, else false
-    private boolean dealerGreaterThan21(Dealer dealer) {
+    public boolean dealerGreaterThan21(Dealer dealer) {
         if (dealer.getValue() > 21) {
             return true;
         }
