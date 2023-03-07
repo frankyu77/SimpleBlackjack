@@ -2,6 +2,8 @@ package model;
 
 import java.util.List;
 
+// Handles everything that has to do with the dealer:
+// deals with when the dealer hits
 public class Dealer {
     private List<Card> dealerCards;
     private int value;

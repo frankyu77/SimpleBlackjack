@@ -52,7 +52,6 @@ class PlayerTest {
     @Test
     void testConstructor() {
         assertEquals(player.getPlayerHand(), playerCards);
-        assertEquals(player.getBalance(), 15);
         assertEquals(player.getSize(), 2);
     }
 
@@ -105,10 +104,10 @@ class PlayerTest {
 
     @Test
     void testPlayerBJ() {
-        assertEquals(player.playerMoney(PBJ, 10, 15), 30);
-        assertEquals(player.playerMoney(PBJ, 24, 15), 51);
+        assertEquals(player.playerMoney(PBJ, 10, 5), 30);
+        assertEquals(player.playerMoney(PBJ, 24, 5), 65);
 
-        assertEquals(player.playerMoney(PBJ, 2.6, 13.69), 17.59);
+        assertEquals(player.playerMoney(PBJ, 2.6, 14.5), 21);
     }
 
 

@@ -5,9 +5,10 @@ import java.util.List;
 
 import static ui.User.*;
 
+// Game class includes the who wins in a game, adds the value of the cards, deals the cards out, and checks if there are
+// not enough cards in the deck
+// also checks when player/dealer value is greater than 21
 public class Game {
-    // Game class includes the WhoWins, Adds value of the cards, DealCards, etc.
-    // all game related stuff
     private DeckOfCards deck;
 
     // REQUIRES: cards.size() >= 4
@@ -54,7 +55,6 @@ public class Game {
         } else {
             return WIN;
         }
-
     }
 
     // EFFECTS: return true if player card values are greater than 21, else false

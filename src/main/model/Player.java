@@ -4,18 +4,16 @@ import java.util.List;
 
 import static ui.User.*;
 
-
+// Handles everything that has to do with the player (user):
+// deals with when the player hits, handles the player's money when they win/lose/draw
 public class Player {
     private List<Card> playerCards;
     private int value;
-    private double startingBalance;
-    private double balance;
 
     // MODIFIES: this
     // EFFECTS: creates a new player with the given hand
     public Player(List<Card> playerHand) {
         this.playerCards = playerHand;
-        this.startingBalance = 15;
     }
 
     // MODIFIES: this
@@ -43,23 +41,27 @@ public class Player {
     //          they win back 1.5x the amount that they bet
     public double playerMoney(int n, double amountBetted, double current) {
         if (n == WIN) {
-            balance = current + amountBetted * 2;
-            return balance;
+            current = current + amountBetted * 2;
+            return current;
         } else if (n == LOSE || n == DBJ) {
-            balance = current;
-            return balance;
+            return current;
         } else if (n == DRAW) {
-            balance = current + amountBetted;
-            return balance;
+            current = current + amountBetted;
+            return current;
         } else {
-            balance = current + amountBetted * 1.5;
-            return balance;
+            current = current + amountBetted * 2.5;
+            return current;
         }
     }
 
-    // EFFECTS: returns the balance of the player
-    public double getBalance() {
-        return startingBalance;
+    // EFFECTS: returns the current money minus the bet made
+    public double betMade(double bet, double currentMoney) {
+        return currentMoney - bet;
+    }
+
+    // EFFECTS: returns the original money before the bet was made
+    public double originalMoney(double bet, double currentMouney) {
+        return currentMouney + bet;
     }
 
     // EFFECTS: returns the size of the player hand

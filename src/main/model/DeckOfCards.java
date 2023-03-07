@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+// creates List<Card> which is the DeckOfCards that the game will work on
 public class DeckOfCards {
     private static List<Card> cards;
 

@@ -5,11 +5,15 @@ import model.*;
 import java.util.List;
 import java.util.Scanner;
 
+// Handles all interface related outputs and inputs
 public class User {
     private DeckOfCards deck1;
     private Game game;
     private int numberOfTimesHit = 3;
-    private double currentMoney = 15;
+    private double currentMoney;
+    private double betStatement;
+    private Player player;
+    private Dealer dealer;
 
     public static final int WIN = 0;
     public static final int LOSE = 1;
@@ -17,11 +21,10 @@ public class User {
     public static final int PBJ = 3;
     public static final int DBJ = 4;
 
-    //testing testing testing
-
     // EFFECTS: creates a new DeckOfCards
     public User() {
         deck1 = new DeckOfCards();
+        currentMoney = 15;
     }
 
     // MODIFIES: this
@@ -36,7 +39,7 @@ public class User {
             String choice = enter.nextLine();
 
             if (choice.equals("instructions")) {
-                instructions(choice);
+                instructions();
                 break;
             } else if (choice.equals("begin")) {
                 System.out.println("---------------------------------------------------------");
@@ -54,7 +57,7 @@ public class User {
 
     // MODIFIES: this
     // EFFECTS: displays the instructions on how to play the game
-    private void instructions(String choice) {
+    private void instructions() {
         System.out.println();
         System.out.println("This is a game of Black Jack, please read the README.md file for more detailed "
                 + "information.");
@@ -168,17 +171,19 @@ public class User {
         List<Card> playerCard1 = game.firstTwoPlayerCards();
         List<Card> dealerCard1 = game.firstTwoDealerCards();
 
-        Player p = new Player(playerCard1);
+        player = new Player(playerCard1);
+        //currentMoney = player.getBalance();
 
-        double betStatement = printBetStatement(currentMoney);
-        currentMoney = currentMoney - betStatement;
+        betStatement = printBetStatement(currentMoney);
+        //currentMoney = currentMoney - betStatement;
+        currentMoney = player.betMade(betStatement, currentMoney);
 
         printAfterBet(betStatement);
 
         while (true) {
-            Dealer d = new Dealer(dealerCard1);
+            dealer = new Dealer(dealerCard1);
 
-            if (printDealerAndPlayerHand(playerCard1, dealerCard1, p, d, game, betStatement)) {
+            if (printDealerAndPlayerHand(playerCard1, dealerCard1, player, dealer, game, betStatement)) {
                 break;
             }
 
@@ -188,7 +193,7 @@ public class User {
             String response = scanner.nextLine();
 
             numberOfTimesHit++;
-            if (handleHitOrStay(response, p, d, playerCard1, dealerCard1, completedDeck, betStatement)) {
+            if (handleHitOrStay(response, player, dealer, playerCard1, dealerCard1, completedDeck, betStatement)) {
                 break;
             }
         }
@@ -233,7 +238,7 @@ public class User {
                                     DeckOfCards completedDeck, double bet) {
         if (game.notEnoughCardsInDeck(numberOfTimesHit, completedDeck)) {
             System.out.println("Not enough cards in deck to continue the game :(");
-            currentMoney += bet;
+            p.originalMoney(bet, currentMoney);
             return true;
         } else if (response.equals("hit")) {
             p.playerHits(numberOfTimesHit, completedDeck);
@@ -245,7 +250,7 @@ public class User {
                 return true;
             }
         } else if (response.equals("stay")) {
-            if (dealersTurn(d, completedDeck, bet)) {
+            if (dealersTurn(p, d, completedDeck, bet)) {
                 return true;
             }
             printDealerAndPlayerHand(playerCard1, dealerCard1, p, d, game, bet);
@@ -261,11 +266,11 @@ public class User {
     // MODIFIES: this, numberOfTimesHit
     // EFFECTS: if dealers total card value is less than or equal to 17, then they will hit, if not enough cards in deck
     //          to continue, then end game
-    private boolean dealersTurn(Dealer d, DeckOfCards completedDeck, double bet) {
+    private boolean dealersTurn(Player p, Dealer d, DeckOfCards completedDeck, double bet) {
         while (d.getValue() <= 17) {
             if (game.notEnoughCardsInDeck(numberOfTimesHit, completedDeck)) {
                 System.out.println("Not enough cards in deck to continue the game :(");
-                currentMoney += bet;
+                p.originalMoney(bet, currentMoney);
                 return true;
             }
             d.dealerHits(numberOfTimesHit, completedDeck);

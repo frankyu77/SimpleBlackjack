@@ -1,7 +1,7 @@
 package model;
 
+// set up a card with the name and the card value assigned to that name
 public class Card {
-    // set up a card with the name and the card value assigned to that name
     private String cardName;
     private int cardValue;
 

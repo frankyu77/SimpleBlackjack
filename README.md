@@ -45,3 +45,6 @@ essentially lead me to wanting to design a game similar to that.
 - As a user, I want to be able to see the amount of money I have 
 - As a user, I want to be able to choose whether I want to hit or stay
 - As a user, I want to be able to see the instructions on how to play the game
+
+- As a user, I want to be able to save my game whenever there is an option for me to do so or after each turn
+- As a user, I want to be able to have a option to start from where I left off at the main menu 
