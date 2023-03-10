@@ -44,12 +44,7 @@ public class User {
     // EFFECTS: displays the home screen to the user
     public void startingMessage() {
         while (true) {
-            System.out.println("--------------------------------------------------------------------------");
-
-            System.out.println("Type 'instructions' to see the instructions.");
-            System.out.println("Type 'begin' to start the game.");
-            System.out.println("Type 'load' to load your previous game.");
-            System.out.println("Type 'quit' to quit.");
+            welcome();
             Scanner enter = new Scanner(System.in);
             String choice = enter.nextLine();
 
@@ -72,6 +67,15 @@ public class User {
             }
         }
 
+    }
+
+    private void welcome() {
+        System.out.println("--------------------------------------------------------------------------");
+
+        System.out.println("Type 'instructions' to see the instructions.");
+        System.out.println("Type 'begin' to start the game.");
+        System.out.println("Type 'load' to load your previous game.");
+        System.out.println("Type 'quit' to quit.");
     }
 
     // MODIFIES: this
@@ -206,12 +210,7 @@ public class User {
                 break;
             }
 
-            System.out.println("--------------------------------------------------------------------------");
-            System.out.println("Do you want to 'hit' or 'stay' or 'save' and quit?");
-            Scanner scanner = new Scanner(System.in);
-            String response = scanner.nextLine();
-
-            numberOfTimesHit++;
+            String response = handleInputHitStaySave();
             if (handleHitOrStay(response, player, dealer, playerCard1, dealerCard1, completedDeck, betStatement)) {
                 playAgain();
                 break;
@@ -220,6 +219,16 @@ public class User {
             }
         }
 
+    }
+
+    private String handleInputHitStaySave() {
+        System.out.println("--------------------------------------------------------------------------");
+        System.out.println("Do you want to 'hit' or 'stay' or 'save' and quit?");
+        Scanner scanner = new Scanner(System.in);
+        String response = scanner.nextLine();
+
+        numberOfTimesHit++;
+        return response;
     }
 
     // REQUIRES: betStatement <= currentMoney, betStatement > 0
@@ -251,6 +260,7 @@ public class User {
         }
     }
 
+    @SuppressWarnings("methodlength")
     // REQUIRES: completedDeck.size() >= 4, bet > 0
     // MODIFIES: this, currentMoney
     // EFFECTS: if there is not enough cards in the deck, end the game. If user hits, check if their value will be
