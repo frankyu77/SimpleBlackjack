@@ -54,6 +54,8 @@ class PlayerTest {
     void testConstructor() {
         assertEquals(player.getPlayerHand(), playerCards);
         assertEquals(player.getSize(), 2);
+        assertEquals(player.getCard(0), king);
+        assertEquals(player.getCard(1), two);
     }
 
     @Test

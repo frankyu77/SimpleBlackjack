@@ -49,6 +49,8 @@ class DealerTest {
     void testConstructor() {
         assertEquals(dealer.getDealerHand(), dealerCards);
         assertEquals(dealer.getSize(), 2);
+        assertEquals(dealer.getCard(0), seven);
+        assertEquals(dealer.getCard(1), three);
     }
 
     @Test
