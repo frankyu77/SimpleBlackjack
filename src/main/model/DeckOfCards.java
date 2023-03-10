@@ -1,11 +1,15 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 // creates List<Card> which is the DeckOfCards that the game will work on
-public class DeckOfCards {
-    private static List<Card> cards;
+public class DeckOfCards implements Writable {
+    private List<Card> cards;
 
     // EFFECTS: creates a new DeckOfCards
     public DeckOfCards() {
@@ -39,4 +43,34 @@ public class DeckOfCards {
         return cards.get(n).getCardValue();
     }
 
+
+
+//    private List<String> getDeckNames() {
+//        for (Card card: cards) {
+//            cardNames.add(card.getCardName());
+//        }
+//        return cardNames;
+//    }
+//
+//    private List<Integer> getDeckValues() {
+//        for (Card card: cards) {
+//            cardValues.add(card.getCardValue());
+//        }
+//        return cardValues;
+//    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("deckOfCards", cardsToJson());
+        return json;
+    }
+
+    private JSONArray cardsToJson() {
+        JSONArray jsonArray = new JSONArray();
+        for (Card c : cards) {
+            jsonArray.put(c.toJson());
+        }
+        return jsonArray;
+    }
 }

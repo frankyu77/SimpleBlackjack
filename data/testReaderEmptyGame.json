@@ -1,0 +1,12 @@
+{
+  "deck": {"deckOfCards": []},
+  "dealer": {
+    "dealerCards": [],
+    "valueD": 0
+  },
+  "player": {
+    "playerCards": [],
+    "money": 15,
+    "value": 0
+  }
+}

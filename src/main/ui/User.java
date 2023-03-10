@@ -1,12 +1,17 @@
 package ui;
 
 import model.*;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
 // Handles all interface related outputs and inputs
 public class User {
+    private static final String JSON_STORE = "./data/Game.json";
     private DeckOfCards deck1;
     private Game game;
     private int numberOfTimesHit = 3;
@@ -15,6 +20,9 @@ public class User {
     private Player player;
     private Dealer dealer;
 
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
+
     public static final int WIN = 0;
     public static final int LOSE = 1;
     public static final int DRAW = 2;
@@ -22,9 +30,14 @@ public class User {
     public static final int DBJ = 4;
 
     // EFFECTS: creates a new DeckOfCards
-    public User() {
+    public User() throws FileNotFoundException {
         deck1 = new DeckOfCards();
         currentMoney = 15;
+        game = new Game();
+        game.setDeckOfCards(deck1);
+
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
     }
 
     // MODIFIES: this
@@ -35,6 +48,8 @@ public class User {
 
             System.out.println("Type 'instructions' to see the instructions.");
             System.out.println("Type 'begin' to start the game.");
+            System.out.println("Type 'load' to load your previous game.");
+            System.out.println("Type 'quit' to quit.");
             Scanner enter = new Scanner(System.in);
             String choice = enter.nextLine();
 
@@ -47,10 +62,14 @@ public class User {
                 System.out.println("---------------------------------------------------------");
                 handlePresetDeck();
                 break;
+            } else if (choice.equals("load")) {
+                loadWorkRoom();
+                handlePresetDeck();
+            } else if (choice.equals("quit")) {
+                break;
             } else {
                 System.out.println("Please enter a valid statement");
             }
-
         }
 
     }
@@ -167,37 +186,40 @@ public class User {
     // EFFECTS: prints out money you have after bet, then deal out the first round of cards, then ask user if they want
     //          to hit or stay. When game ends, ask if they want to play again
     private void printFirstRoundOfCards(DeckOfCards completedDeck) {
-        game = new Game(completedDeck);
-        List<Card> playerCard1 = game.firstTwoPlayerCards();
-        List<Card> dealerCard1 = game.firstTwoDealerCards();
+        player = new Player();
+        dealer = new Dealer();
+        game.setDeckOfCards(completedDeck);
 
-        player = new Player(playerCard1);
-        //currentMoney = player.getBalance();
+        player.setPlayerHand(game.firstTwoPlayerCards());
+        dealer.setDealerHand(game.firstTwoDealerCards());
+        List<Card> playerCard1 = player.getPlayerHand();
+        List<Card> dealerCard1 = dealer.getDealerHand();
 
-        betStatement = printBetStatement(currentMoney);
-        //currentMoney = currentMoney - betStatement;
-        currentMoney = player.betMade(betStatement, currentMoney);
+        player.setMoney(currentMoney);
+        betStatement = printBetStatement(player.getBalance());
+        currentMoney = player.betMade(betStatement);
 
         printAfterBet(betStatement);
 
         while (true) {
-            dealer = new Dealer(dealerCard1);
-
-            if (printDealerAndPlayerHand(playerCard1, dealerCard1, player, dealer, game, betStatement)) {
+            if (printDealerAndPlayerHand(playerCard1, dealerCard1, player, dealer, betStatement)) {
                 break;
             }
 
             System.out.println("--------------------------------------------------------------------------");
-            System.out.println("Do you want to 'hit' or 'stay'?");
+            System.out.println("Do you want to 'hit' or 'stay' or 'save' and quit?");
             Scanner scanner = new Scanner(System.in);
             String response = scanner.nextLine();
 
             numberOfTimesHit++;
             if (handleHitOrStay(response, player, dealer, playerCard1, dealerCard1, completedDeck, betStatement)) {
+                playAgain();
+                break;
+            } else {
                 break;
             }
         }
-        playAgain();
+
     }
 
     // REQUIRES: betStatement <= currentMoney, betStatement > 0
@@ -222,7 +244,7 @@ public class User {
             } else {
                 numberOfTimesHit = 3;
                 this.deck1 = new DeckOfCards();
-                handlePresetDeck();
+                startingMessage();
             }
         } else {
             System.out.println("Thank you for playing!");
@@ -238,12 +260,12 @@ public class User {
                                     DeckOfCards completedDeck, double bet) {
         if (game.notEnoughCardsInDeck(numberOfTimesHit, completedDeck)) {
             System.out.println("Not enough cards in deck to continue the game :(");
-            p.originalMoney(bet, currentMoney);
+            currentMoney = p.getBalance();
             return true;
         } else if (response.equals("hit")) {
             p.playerHits(numberOfTimesHit, completedDeck);
             if (game.playerGreaterThan21(p)) {
-                printDealerAndPlayerHand(playerCard1, dealerCard1, p, d, game, bet);
+                printDealerAndPlayerHand(playerCard1, dealerCard1, p, d, bet);
 
                 lostStatementWithMoneyLost(p, bet);
 
@@ -253,13 +275,21 @@ public class User {
             if (dealersTurn(p, d, completedDeck, bet)) {
                 return true;
             }
-            printDealerAndPlayerHand(playerCard1, dealerCard1, p, d, game, bet);
+            printDealerAndPlayerHand(playerCard1, dealerCard1, p, d, bet);
             handleMoney(p, d, bet);
             return true;
+        } else if (response.equals("save")) {
+            saveWorkRoom();
+            endGame();
+            return false;
         } else {
             return true;
         }
         return false;
+    }
+
+    private void endGame() {
+        System.out.println("Thank you for playing!");
     }
 
     // REQUIRES: completedDeck.size() >= 4
@@ -270,7 +300,7 @@ public class User {
         while (d.getValue() <= 17) {
             if (game.notEnoughCardsInDeck(numberOfTimesHit, completedDeck)) {
                 System.out.println("Not enough cards in deck to continue the game :(");
-                p.originalMoney(bet, currentMoney);
+                currentMoney = p.getBalance();
                 return true;
             }
             d.dealerHits(numberOfTimesHit, completedDeck);
@@ -284,7 +314,7 @@ public class User {
     // EFFECTS: print statements for when player loses, and prints out their money after their loss
     private void lostStatementWithMoneyLost(Player p, double bet) {
         System.out.println("You Lose!");
-        currentMoney = p.playerMoney(LOSE, bet, currentMoney);
+        currentMoney = p.playerMoney(LOSE, bet);
         System.out.println("-----------------------------");
         System.out.println("Current balance: " + currentMoney);
         System.out.println("-----------------------------");
@@ -293,7 +323,7 @@ public class User {
     // REQUIRES: bet > 0
     // EFFECTS: prints out the hands for the dealer and the player
     private boolean printDealerAndPlayerHand(List<Card> playerCards, List<Card> dealerCards, Player play, Dealer deal,
-                                          Game game, double bet) {
+                                             double bet) {
         System.out.println("--------------------------------------------------------------------------");
         System.out.print("Dealer: ");
         if (dealerCards.size() > 0) {
@@ -351,9 +381,32 @@ public class User {
         } else if (w == WIN) {
             System.out.println("You Win!");
         }
-        currentMoney = player.playerMoney(w, bet, currentMoney);
+        currentMoney = player.playerMoney(w, bet);
         System.out.println("-----------------------------");
         System.out.println("Current balance: " + currentMoney);
         System.out.println("-----------------------------");
+    }
+
+    // EFFECTS: saves the workroom to file
+    private void saveWorkRoom() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(game);
+            jsonWriter.close();
+            System.out.println("Saved deck to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads workroom from file
+    private void loadWorkRoom() {
+        try {
+            game = jsonReader.read();
+            System.out.println("Loaded deck from " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
+        }
     }
 }

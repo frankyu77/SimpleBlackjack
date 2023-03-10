@@ -37,24 +37,36 @@ class GameTest {
         cards.addCard(four);
         cards.addCard(ace);
         cards.addCard(queen);
-        game = new Game(cards);
+        game = new Game();
     }
 
     @Test
     void testConstructor() {
+        game.setDeckOfCards(cards);
         assertEquals(game.getDeck(), cards);
     }
     //------------------------------------------------------------------------------------------------------------------
     @Test
     void testFirstTwoPlayerCards() {
-        List<Card> pc = new ArrayList<Card>();
-        pc.add(king);
-        pc.add(two);
+        DeckOfCards pc = new DeckOfCards();
+        pc.addCard(king);
+        pc.addCard(four);
+        pc.addCard(two);
+        pc.addCard(seven);
+        game2 = new Game();
+        game2.setDeckOfCards(pc);
 
-        assertEquals(pc, game.firstTwoPlayerCards());
-        assertEquals(2, game.firstTwoPlayerCards().size());
-        assertTrue(game.firstTwoPlayerCards().get(0) == king);
-        assertTrue(game.firstTwoPlayerCards().get(1) == two);
+        List<Card> cards = new ArrayList<>();
+        cards.add(king);
+        cards.add(two);
+        Player player = new Player();
+        player.setPlayerHand(cards);
+
+        assertEquals(player.getPlayerHand(), game2.firstTwoPlayerCards());
+        assertEquals(game2.firstTwoPlayerCards().size(), 2);
+        assertEquals(2, player.getSize());
+        assertTrue(game2.firstTwoPlayerCards().get(0) == king);
+        assertTrue(game2.firstTwoPlayerCards().get(1) == two);
     }
 
     @Test
@@ -62,24 +74,31 @@ class GameTest {
         cards2 = new DeckOfCards();
         cards2.addCard(two);
         cards2.addCard(one);
-        game2 = new Game(cards2);
+        game2 = new Game();
 
-        List<Card> pc = new ArrayList<Card>();
+        List<Card> cards = new ArrayList<>();
+        Player player = new Player();
+        player.setPlayerHand(cards);
 
-        assertEquals(pc, game2.firstTwoPlayerCards());
+        assertEquals(player.getPlayerHand(), game2.firstTwoPlayerCards());
         assertEquals(0, game2.firstTwoPlayerCards().size());
     }
     //------------------------------------------------------------------------------------------------------------------
     @Test
     void testFirstTwoDealerCards() {
-        List<Card> dc = new ArrayList<Card>();
-        dc.add(seven);
-        dc.add(three);
+        game2 = new Game();
+        game2.setDeckOfCards(cards);
 
-        assertEquals(dc, game.firstTwoDealerCards());
-        assertEquals(2, game.firstTwoDealerCards().size());
-        assertTrue(game.firstTwoDealerCards().get(0) == seven);
-        assertTrue(game.firstTwoDealerCards().get(1) == three);
+        List<Card> cards = new ArrayList<>();
+        cards.add(seven);
+        cards.add(three);
+        Dealer dealer1 = new Dealer();
+        dealer1.setDealerHand(cards);
+
+        assertEquals(dealer1.getDealerHand(), game2.firstTwoDealerCards());
+        assertEquals(2, game2.firstTwoDealerCards().size());
+        assertTrue(game2.firstTwoDealerCards().get(0) == seven);
+        assertTrue(game2.firstTwoDealerCards().get(1) == three);
     }
 
     @Test
@@ -87,11 +106,13 @@ class GameTest {
         cards2 = new DeckOfCards();
         cards2.addCard(two);
         cards2.addCard(one);
-        game2 = new Game(cards2);
+        game2 = new Game();
 
-        List<Card> dc = new ArrayList<Card>();
+        List<Card> cards = new ArrayList<>();
+        Dealer dealer = new Dealer();
+        dealer.setDealerHand(cards);
 
-        assertEquals(dc, game2.firstTwoDealerCards());
+        assertEquals(dealer.getDealerHand(), game.firstTwoDealerCards());
         assertEquals(0, game2.firstTwoDealerCards().size());
     }
     //------------------------------------------------------------------------------------------------------------------
@@ -101,12 +122,14 @@ class GameTest {
         pc.add(king);
         pc.add(seven);
         pc.add(three);
-        player = new Player(pc);
+        player = new Player();
+        player.setPlayerHand(pc);
 
         List<Card> dc = new ArrayList<Card>();
         dc.add(queen);
         dc.add(seven);
-        dealer = new Dealer(dc);
+        dealer = new Dealer();
+        dealer.setDealerHand(dc);
 
         assertTrue(game.whoWins(player, dealer) == WIN);
     }
@@ -118,12 +141,14 @@ class GameTest {
         pc.add(seven);
         pc.add(three);
         pc.add(one);
-        player = new Player(pc);
+        player = new Player();
+        player.setPlayerHand(pc);
 
         List<Card> dc = new ArrayList<Card>();
         dc.add(queen);
         dc.add(seven);
-        dealer = new Dealer(dc);
+        dealer = new Dealer();
+        dealer.setDealerHand(dc);
 
         assertTrue(game.whoWins(player, dealer) == WIN);
     }
@@ -135,12 +160,14 @@ class GameTest {
         pc.add(seven);
         pc.add(three);
         pc.add(two);
-        player = new Player(pc);
+        player = new Player();
+        player.setPlayerHand(pc);
 
         List<Card> dc = new ArrayList<Card>();
         dc.add(queen);
         dc.add(seven);
-        dealer = new Dealer(dc);
+        dealer = new Dealer();
+        dealer.setDealerHand(dc);
 
         assertTrue(game.whoWins(player, dealer) == LOSE);
     }
@@ -153,12 +180,14 @@ class GameTest {
         pc.add(three);
         pc.add(two);
         pc.add(queen);
-        player = new Player(pc);
+        player = new Player();
+        player.setPlayerHand(pc);
 
         List<Card> dc = new ArrayList<Card>();
         dc.add(queen);
         dc.add(seven);
-        dealer = new Dealer(dc);
+        dealer = new Dealer();
+        dealer.setDealerHand(dc);
 
         assertTrue(game.whoWins(player, dealer) == LOSE);
     }
@@ -168,12 +197,14 @@ class GameTest {
         List<Card> pc = new ArrayList<Card>();
         pc.add(king);
         pc.add(ace);
-        player = new Player(pc);
+        player = new Player();
+        player.setPlayerHand(pc);
 
         List<Card> dc = new ArrayList<Card>();
         dc.add(queen);
         dc.add(seven);
-        dealer = new Dealer(dc);
+        dealer = new Dealer();
+        dealer.setDealerHand(dc);
 
         assertTrue(game.whoWins(player, dealer) == PBJ);
     }
@@ -183,13 +214,15 @@ class GameTest {
         List<Card> pc = new ArrayList<Card>();
         pc.add(queen);
         pc.add(seven);
-        player = new Player(pc);
+        player = new Player();
+        player.setPlayerHand(pc);
 
         List<Card> dc = new ArrayList<Card>();
         dc.add(king);
         dc.add(seven);
         dc.add(three);
-        dealer = new Dealer(dc);
+        dealer = new Dealer();
+        dealer.setDealerHand(dc);
 
         assertTrue(game.whoWins(player, dealer) == LOSE);
     }
@@ -199,14 +232,16 @@ class GameTest {
         List<Card> pc = new ArrayList<Card>();
         pc.add(queen);
         pc.add(seven);
-        player = new Player(pc);
+        player = new Player();
+        player.setPlayerHand(pc);
 
         List<Card> dc = new ArrayList<Card>();
         dc.add(king);
         dc.add(seven);
         dc.add(three);
         dc.add(one);
-        dealer = new Dealer(dc);
+        dealer = new Dealer();
+        dealer.setDealerHand(dc);
 
         assertTrue(game.whoWins(player, dealer) == LOSE);
     }
@@ -216,14 +251,16 @@ class GameTest {
         List<Card> pc = new ArrayList<Card>();
         pc.add(queen);
         pc.add(seven);
-        player = new Player(pc);
+        player = new Player();
+        player.setPlayerHand(pc);
 
         List<Card> dc = new ArrayList<Card>();
         dc.add(king);
         dc.add(seven);
         dc.add(three);
         dc.add(two);
-        dealer = new Dealer(dc);
+        dealer = new Dealer();
+        dealer.setDealerHand(dc);
 
         assertTrue(game.whoWins(player, dealer) == WIN);
     }
@@ -233,14 +270,16 @@ class GameTest {
         List<Card> pc = new ArrayList<Card>();
         pc.add(queen);
         pc.add(seven);
-        player = new Player(pc);
+        player = new Player();
+        player.setPlayerHand(pc);
 
         List<Card> dc = new ArrayList<Card>();
         dc.add(king);
         dc.add(four);
         dc.add(two);
         dc.add(queen);
-        dealer = new Dealer(dc);
+        dealer = new Dealer();
+        dealer.setDealerHand(dc);
 
         assertTrue(game.whoWins(player, dealer) == WIN);
     }
@@ -250,12 +289,14 @@ class GameTest {
         List<Card> pc = new ArrayList<Card>();
         pc.add(queen);
         pc.add(seven);
-        player = new Player(pc);
+        player = new Player();
+        player.setPlayerHand(pc);
 
         List<Card> dc = new ArrayList<Card>();
         dc.add(king);
         dc.add(ace);
-        dealer = new Dealer(dc);
+        dealer = new Dealer();
+        dealer.setDealerHand(dc);
 
         assertTrue(game.whoWins(player, dealer) == DBJ);
     }
@@ -266,12 +307,14 @@ class GameTest {
         pc.add(queen);
         pc.add(four);
         pc.add(three);
-        player = new Player(pc);
+        player = new Player();
+        player.setPlayerHand(pc);
 
         List<Card> dc = new ArrayList<Card>();
         dc.add(king);
         dc.add(seven);
-        dealer = new Dealer(dc);
+        dealer = new Dealer();
+        dealer.setDealerHand(dc);
 
         assertTrue(game.whoWins(player, dealer) == DRAW);
     }
@@ -283,13 +326,15 @@ class GameTest {
         pc.add(four);
         pc.add(three);
         pc.add(four);
-        player = new Player(pc);
+        player = new Player();
+        player.setPlayerHand(pc);
 
         List<Card> dc = new ArrayList<Card>();
         dc.add(king);
         dc.add(four);
         dc.add(seven);
-        dealer = new Dealer(dc);
+        dealer = new Dealer();
+        dealer.setDealerHand(dc);
 
         assertTrue(game.whoWins(player, dealer) == DRAW);
     }
@@ -299,12 +344,14 @@ class GameTest {
         List<Card> pc = new ArrayList<Card>();
         pc.add(queen);
         pc.add(two);
-        player = new Player(pc);
+        player = new Player();
+        player.setPlayerHand(pc);
 
         List<Card> dc = new ArrayList<Card>();
         dc.add(king);
         dc.add(two);
-        dealer = new Dealer(dc);
+        dealer = new Dealer();
+        dealer.setDealerHand(dc);
 
         assertTrue(game.whoWins(player, dealer) == DRAW);
     }
@@ -314,12 +361,14 @@ class GameTest {
         List<Card> pc = new ArrayList<Card>();
         pc.add(queen);
         pc.add(ace);
-        player = new Player(pc);
+        player = new Player();
+        player.setPlayerHand(pc);
 
         List<Card> dc = new ArrayList<Card>();
         dc.add(king);
         dc.add(ace);
-        dealer = new Dealer(dc);
+        dealer = new Dealer();
+        dealer.setDealerHand(dc);
 
         assertTrue(game.whoWins(player, dealer) == DRAW);
     }
@@ -331,7 +380,8 @@ class GameTest {
         pc.add(four);
         pc.add(three);
         pc.add(seven);
-        player = new Player(pc);
+        player = new Player();
+        player.setPlayerHand(pc);
 
         assertTrue(game.playerGreaterThan21(player));
     }
@@ -344,7 +394,8 @@ class GameTest {
         pc.add(three);
         pc.add(four);
         pc.add(one);
-        player = new Player(pc);
+        player = new Player();
+        player.setPlayerHand(pc);
 
         assertTrue(game.playerGreaterThan21(player));
     }
@@ -356,7 +407,8 @@ class GameTest {
         pc.add(four);
         pc.add(three);
         pc.add(three);
-        player = new Player(pc);
+        player = new Player();
+        player.setPlayerHand(pc);
 
         assertFalse(game.playerGreaterThan21(player));
     }
@@ -366,7 +418,8 @@ class GameTest {
         List<Card> pc = new ArrayList<Card>();
         pc.add(queen);
         pc.add(two);
-        player = new Player(pc);
+        player = new Player();
+        player.setPlayerHand(pc);
 
         assertFalse(game.playerGreaterThan21(player));
     }
@@ -378,7 +431,8 @@ class GameTest {
         pc.add(four);
         pc.add(three);
         pc.add(four);
-        player = new Player(pc);
+        player = new Player();
+        player.setPlayerHand(pc);
 
         assertFalse(game.playerGreaterThan21(player));
     }
@@ -390,7 +444,8 @@ class GameTest {
         dc.add(four);
         dc.add(three);
         dc.add(seven);
-        dealer = new Dealer(dc);
+        dealer = new Dealer();
+        dealer.setDealerHand(dc);
 
         assertTrue(game.dealerGreaterThan21(dealer));
     }
@@ -403,7 +458,8 @@ class GameTest {
         dc.add(three);
         dc.add(four);
         dc.add(one);
-        dealer = new Dealer(dc);
+        dealer = new Dealer();
+        dealer.setDealerHand(dc);
 
         assertTrue(game.dealerGreaterThan21(dealer));
     }
@@ -415,7 +471,8 @@ class GameTest {
         dc.add(four);
         dc.add(three);
         dc.add(three);
-        dealer = new Dealer(dc);
+        dealer = new Dealer();
+        dealer.setDealerHand(dc);
 
         assertFalse(game.dealerGreaterThan21(dealer));
     }
@@ -425,7 +482,8 @@ class GameTest {
         List<Card> dc = new ArrayList<Card>();
         dc.add(queen);
         dc.add(two);
-        dealer = new Dealer(dc);
+        dealer = new Dealer();
+        dealer.setDealerHand(dc);
 
         assertFalse(game.dealerGreaterThan21(dealer));
     }
@@ -437,7 +495,8 @@ class GameTest {
         dc.add(four);
         dc.add(three);
         dc.add(four);
-        dealer = new Dealer(dc);
+        dealer = new Dealer();
+        dealer.setDealerHand(dc);
 
         assertFalse(game.dealerGreaterThan21(dealer));
     }
@@ -447,7 +506,7 @@ class GameTest {
         DeckOfCards deck = new DeckOfCards();
         deck.addCard(one);
         deck.addCard(two);
-        Game game1 = new Game(deck);
+        Game game1 = new Game();
         assertTrue(game1.notEnoughCardsInDeck(3, deck));
         assertTrue(game1.notEnoughCardsInDeck(2, deck));
         assertFalse(game1.notEnoughCardsInDeck(1, deck));
@@ -458,7 +517,7 @@ class GameTest {
         deck1.addCard(king);
         deck1.addCard(queen);
         deck1.addCard(ace);
-        Game game2 = new Game(deck1);
+        Game game2 = new Game();
         assertTrue(game2.notEnoughCardsInDeck(5, deck1));
         assertFalse(game2.notEnoughCardsInDeck(4, deck1));
         assertTrue(game2.notEnoughCardsInDeck(6, deck1));

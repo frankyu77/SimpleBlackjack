@@ -1,0 +1,59 @@
+{
+    "deck": {"deckOfCards": [
+        {
+            "cardName": "4",
+            "cardValue": 4
+        },
+        {
+            "cardName": "5",
+            "cardValue": 5
+        },
+        {
+            "cardName": "6",
+            "cardValue": 6
+        },
+        {
+            "cardName": "7",
+            "cardValue": 7
+        },
+        {
+            "cardName": "8",
+            "cardValue": 8
+        },
+        {
+            "cardName": "2",
+            "cardValue": 2
+        },
+        {
+            "cardName": "3",
+            "cardValue": 3
+        }
+    ]},
+    "dealer": {
+        "dealerCards": [
+            {
+                "cardName": "5",
+                "cardValue": 5
+            },
+            {
+                "cardName": "7",
+                "cardValue": 7
+            }
+        ],
+        "valueD": 0
+    },
+    "player": {
+        "playerCards": [
+            {
+                "cardName": "4",
+                "cardValue": 4
+            },
+            {
+                "cardName": "6",
+                "cardValue": 6
+            }
+        ],
+        "money": 15,
+        "value": 0
+    }
+}

@@ -46,7 +46,8 @@ class PlayerTest {
         startingBalance = 15;
         balance = 0;
 
-        player = new Player(playerCards);
+        player = new Player();
+        player.setPlayerHand(playerCards);
     }
 
     @Test
@@ -80,34 +81,41 @@ class PlayerTest {
 
     @Test
     void testPlayerWinMoney() {
-        assertEquals(player.playerMoney(WIN, 10, 15), 35);
-        assertEquals(player.playerMoney(WIN, 1, 15), 17);
-        assertEquals(player.playerMoney(WIN, 1.25, 15), 17.5);
+        assertEquals(player.playerMoney(WIN, 10), 35);
+        assertEquals(player.playerMoney(WIN, 1), 37);
+        assertEquals(player.playerMoney(WIN, 1.25), 39.5);
 
-        assertEquals(player.playerMoney(WIN, 1.25, 2.5), 5);
+        assertEquals(player.playerMoney(WIN, 1.25), 42);
     }
 
     @Test
     void testPlayerLoseMoney() {
-        assertEquals(player.playerMoney(LOSE, 10, 15), 15);
-        assertEquals(player.playerMoney(DBJ, 10, 15), 15);
+        assertEquals(player.playerMoney(LOSE, 10), 15);
+        assertEquals(player.playerMoney(DBJ, 2.5), 15);
     }
 
     @Test
     void testPlayerDraw() {
-        assertEquals(player.playerMoney(DRAW, 10, 15),25);
-        assertEquals(player.playerMoney(DRAW, 2.3, 15),17.3);
-        assertEquals(player.playerMoney(DRAW, 20, 15),35);
+        assertEquals(player.playerMoney(DRAW, 10),25);
+        assertEquals(player.playerMoney(DRAW, 2.3),27.3);
+        assertEquals(player.playerMoney(DRAW, 20),47.3);
 
-        assertEquals(player.playerMoney(DRAW, 2.45, 1.34),3.79);
+        assertEquals(player.playerMoney(DRAW, 2.45),49.75);
     }
 
     @Test
     void testPlayerBJ() {
-        assertEquals(player.playerMoney(PBJ, 10, 5), 30);
-        assertEquals(player.playerMoney(PBJ, 24, 5), 65);
+        assertEquals(player.playerMoney(PBJ, 10), 40);
+        assertEquals(player.playerMoney(PBJ, 24), 100);
 
-        assertEquals(player.playerMoney(PBJ, 2.6, 14.5), 21);
+        assertEquals(player.playerMoney(PBJ, 2.6), 106.5);
+    }
+
+    @Test
+    void testBetMade() {
+        assertEquals(player.betMade(2), 13);
+        assertEquals(player.betMade(5), 8);
+        assertEquals(player.betMade(5.42), 2.58);
     }
 
 

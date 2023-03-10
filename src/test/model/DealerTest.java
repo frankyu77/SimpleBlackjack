@@ -41,7 +41,8 @@ class DealerTest {
 
         value = 0;
 
-        dealer = new Dealer(dealerCards);
+        dealer = new Dealer();
+        dealer.setDealerHand(dealerCards);
     }
 
     @Test

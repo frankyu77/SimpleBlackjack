@@ -1,19 +1,31 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import static ui.User.*;
 
 // Handles everything that has to do with the player (user):
 // deals with when the player hits, handles the player's money when they win/lose/draw
-public class Player {
+public class Player implements Writable {
     private List<Card> playerCards;
     private int value;
+    private double money;
 
     // MODIFIES: this
     // EFFECTS: creates a new player with the given hand
-    public Player(List<Card> playerHand) {
-        this.playerCards = playerHand;
+    public Player() {
+        this.playerCards = new ArrayList<>();
+        this.money = 15;
+    }
+
+    public void setPlayerHand(List<Card> playerCards) {
+        this.playerCards = playerCards;
+        //return this.playerCards;
     }
 
     // MODIFIES: this
@@ -35,33 +47,55 @@ public class Player {
     }
 
     // REQUIRES: n >= 0, amountBetted >= 0, current >= 0
-    // MODIFIES: this
+    // MODIFIES: this, current
     // EFFECTS: if player wins normally, then they win double the amount they bet, if they lose, they don't get the
     //          amount they bet back, if they draw, they just get the amount they bet back, if player hit blackjack,
     //          they win back 1.5x the amount that they bet
-    public double playerMoney(int n, double amountBetted, double current) {
+    public double playerMoney(int n, double amountBetted) {
         if (n == WIN) {
-            current = current + amountBetted * 2;
-            return current;
+            this.money += amountBetted * 2;
+            return this.money;
         } else if (n == LOSE || n == DBJ) {
-            return current;
+            return this.money;
         } else if (n == DRAW) {
-            current = current + amountBetted;
-            return current;
+            this.money += amountBetted;
+            return this.money;
         } else {
-            current = current + amountBetted * 2.5;
-            return current;
+            this.money += amountBetted * 2.5;
+            return this.money;
         }
     }
 
+    // REQUIRES: bet <= currentMoney && bet > 0
     // EFFECTS: returns the current money minus the bet made
-    public double betMade(double bet, double currentMoney) {
-        return currentMoney - bet;
+    public double betMade(double bet) {
+        this.money -= bet;
+        return this.money;
     }
 
-    // EFFECTS: returns the original money before the bet was made
-    public double originalMoney(double bet, double currentMouney) {
-        return currentMouney + bet;
+    public double getBalance() {
+        return this.money;
+    }
+
+    public double setMoney(double prevMoney) {
+        this.money = prevMoney;
+        return money;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
+
+    public Card getCard(int index) {
+        return this.playerCards.get(index);
+    }
+
+    public int getCardValue(int index) {
+        return this.playerCards.get(index).getCardValue();
+    }
+
+    public String getCardName(int index) {
+        return this.playerCards.get(index).getCardName();
     }
 
     // EFFECTS: returns the size of the player hand
@@ -73,4 +107,27 @@ public class Player {
     public List<Card> getPlayerHand() {
         return playerCards;
     }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("value", value);
+        json.put("money", money);
+        json.put("playerCards", cardsToJson());
+        return json;
+    }
+
+    private JSONArray cardsToJson() {
+        JSONArray jsonArray = new JSONArray();
+        for (Card c : playerCards) {
+            jsonArray.put(c.toJson());
+        }
+        return jsonArray;
+    }
+
+//    public List<Card> addCard(Card card) {
+//        this.playerCards.add(card);
+//        return this.playerCards;
+//    }
+
 }

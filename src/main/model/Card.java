@@ -1,7 +1,10 @@
 package model;
 
+import org.json.JSONObject;
+import persistence.Writable;
+
 // set up a card with the name and the card value assigned to that name
-public class Card {
+public class Card implements Writable {
     private String cardName;
     private int cardValue;
 
@@ -20,6 +23,14 @@ public class Card {
     // EFFECTS: returns the card value
     public int getCardValue() {
         return this.cardValue;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("cardName", cardName);
+        json.put("cardValue", cardValue);
+        return json;
     }
 
 }
