@@ -59,7 +59,7 @@ public class User {
                 break;
             } else if (choice.equals("load")) {
                 loadWorkRoom();
-                handlePresetDeck();
+                actualGame(deck1, player.getPlayerHand(), dealer.getDealerHand());
             } else if (choice.equals("quit")) {
                 break;
             } else {
@@ -202,24 +202,34 @@ public class User {
         player.setMoney(currentMoney);
         betStatement = printBetStatement(player.getBalance());
         currentMoney = player.betMade(betStatement);
-
+        game.setPlayer(player);
+        game.setDealer(dealer);
         printAfterBet(betStatement);
-        String response = handleInputHitStaySave();
+
+        actualGame(completedDeck, playerCard1, dealerCard1);
+    }
+
+    private void actualGame(DeckOfCards completedDeck, List<Card> playerCard1, List<Card> dealerCard1) {
         while (true) {
             if (printDealerAndPlayerHand(playerCard1, dealerCard1, player, dealer, betStatement)) {
                 break;
             }
 
+            String response = handleInputHitStaySave();
 
-            if (handleHitOrStay(response, player, dealer, playerCard1, dealerCard1, completedDeck, betStatement)) {
-                //playAgain();
-                break;
-            } else {
-                break;
+            try {
+                int value = handleHitOrStay(response, player, dealer, playerCard1, dealerCard1,
+                        completedDeck, betStatement);
+                if (value == LOSE) {
+                    playAgain();
+                } else if (value == 7) {
+                    System.out.println("saved bruh...");
+                    break;
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
-        playAgain();
-
     }
 
     private String handleInputHitStaySave() {
@@ -267,12 +277,12 @@ public class User {
     // EFFECTS: if there is not enough cards in the deck, end the game. If user hits, check if their value will be
     //          greater than 21, if so they lose, if not then continue. If user stays, let the dealer go and check
     //          who wins.
-    private boolean handleHitOrStay(String response, Player p, Dealer d, List<Card> playerCard1, List<Card> dealerCard1,
+    private int handleHitOrStay(String response, Player p, Dealer d, List<Card> playerCard1, List<Card> dealerCard1,
                                     DeckOfCards completedDeck, double bet) {
         if (game.notEnoughCardsInDeck(numberOfTimesHit, completedDeck)) {
             System.out.println("Not enough cards in deck to continue the game :(");
             currentMoney = p.getBalance();
-            return true;
+            return LOSE;
         } else if (response.equals("hit")) {
             p.playerHits(numberOfTimesHit, completedDeck);
             if (game.playerGreaterThan21(p)) {
@@ -280,23 +290,23 @@ public class User {
 
                 lostStatementWithMoneyLost(p, bet);
 
-                return true;
+                return LOSE;
             }
         } else if (response.equals("stay")) {
             if (dealersTurn(p, d, completedDeck, bet)) {
-                return true;
+                return LOSE;
             }
             printDealerAndPlayerHand(playerCard1, dealerCard1, p, d, bet);
             handleMoney(p, d, bet);
-            return true;
+            return LOSE;
         } else if (response.equals("save")) {
             saveWorkRoom();
             endGame();
-            return false;
+            return 7;
         } else {
-            return true;
+            return LOSE;
         }
-        return false;
+        return WIN;
     }
 
     private void endGame() {
@@ -415,6 +425,10 @@ public class User {
     private void loadWorkRoom() {
         try {
             game = jsonReader.read();
+            deck1 = game.getDeck();
+            player = game.getPlayer();
+            dealer = game.getDealer();
+            numberOfTimesHit = player.getSize() + dealer.getSize() - 1;
             System.out.println("Loaded deck from " + JSON_STORE);
         } catch (IOException e) {
             System.out.println("Unable to read from file: " + JSON_STORE);
