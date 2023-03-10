@@ -204,20 +204,21 @@ public class User {
         currentMoney = player.betMade(betStatement);
 
         printAfterBet(betStatement);
-
+        String response = handleInputHitStaySave();
         while (true) {
             if (printDealerAndPlayerHand(playerCard1, dealerCard1, player, dealer, betStatement)) {
                 break;
             }
 
-            String response = handleInputHitStaySave();
+
             if (handleHitOrStay(response, player, dealer, playerCard1, dealerCard1, completedDeck, betStatement)) {
-                playAgain();
+                //playAgain();
                 break;
             } else {
                 break;
             }
         }
+        playAgain();
 
     }
 
