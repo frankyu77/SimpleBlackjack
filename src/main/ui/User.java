@@ -201,6 +201,7 @@ public class User {
 
         player.setMoney(currentMoney);
         betStatement = printBetStatement(player.getBalance());
+        player.setBet(betStatement);
         currentMoney = player.betMade(betStatement);
         game.setPlayer(player);
         game.setDealer(dealer);
@@ -222,6 +223,7 @@ public class User {
                         completedDeck, betStatement);
                 if (value == LOSE) {
                     playAgain();
+                    break;
                 } else if (value == 7) {
                     System.out.println("saved bruh...");
                     break;
@@ -427,6 +429,7 @@ public class User {
             game = jsonReader.read();
             deck1 = game.getDeck();
             player = game.getPlayer();
+            betStatement = game.getPlayer().getBet();
             dealer = game.getDealer();
             numberOfTimesHit = player.getSize() + dealer.getSize() - 1;
             System.out.println("Loaded deck from " + JSON_STORE);

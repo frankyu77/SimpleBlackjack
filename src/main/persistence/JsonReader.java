@@ -87,8 +87,10 @@ public class JsonReader {
     private void addPlayer(Game game, JSONObject jsonObject) {
         int value = jsonObject.getInt("value");
         double playerMoney = jsonObject.getDouble("money");
+        double playerBet = jsonObject.getDouble("bet");
 
         Player player = new Player();
+        player.setBet(playerBet);
         player.setMoney(playerMoney);
         player.setValue(value);
         addPlayerCards(player, jsonObject);

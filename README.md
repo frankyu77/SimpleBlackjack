@@ -13,8 +13,7 @@ beat you, lose, or draw. In this game, you have the option to play with other bo
 but remember, your goal is to only beat the dealer. Any player that beats the dealer 
 will win.
 
-In this game of Black Jack, everyone will start with $20, and you can only bet in increments
-of $5, with a minimum bet of $5 as well. You can bet any amount of money, as long as you have 
+In this game of Black Jack, everyone will start with $20. You can bet any amount of money, as long as you have 
 it and if you win, you get double the money back. If you lose, you lose the money that you bet. 
 If you draw with the dealer, you keep the money you bet and the dealer will take back the money 
 they bet as well. If you get a *Black Jack*, you get paid 150% of the value that you bet. One 

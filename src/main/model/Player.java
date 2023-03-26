@@ -15,6 +15,7 @@ public class Player implements Writable {
     private List<Card> playerCards;
     private int value;
     private double money;
+    private double bet;
 
     // MODIFIES: this
     // EFFECTS: creates a new player with the given hand
@@ -82,6 +83,14 @@ public class Player implements Writable {
         return money;
     }
 
+    public void setBet(double bet) {
+        this.bet = bet;
+    }
+
+    public double getBet() {
+        return this.bet;
+    }
+
     public void setValue(int value) {
         this.value = value;
     }
@@ -114,6 +123,7 @@ public class Player implements Writable {
         json.put("value", value);
         json.put("money", money);
         json.put("playerCards", cardsToJson());
+        json.put("bet", bet);
         return json;
     }
 
