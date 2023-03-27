@@ -2,6 +2,7 @@ package ui;
 
 import model.Card;
 import model.DeckOfCards;
+import model.Player;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,9 +29,12 @@ public class SetupGUI extends JFrame implements ActionListener {
     JButton beginButton;
 
     DeckOfCards deck = new DeckOfCards();
+    Player player = new Player();
     private int numberOfCards = 0;
 
-    public SetupGUI() {
+    public SetupGUI(Player p) {
+        player = p;
+
         ImageIcon image = new ImageIcon("src/BlackJack.png");
         panel = new JPanel();
         cardName = new JLabel();
@@ -151,8 +155,7 @@ public class SetupGUI extends JFrame implements ActionListener {
         if (e.getSource() == addCardButton) {
             String cardN = cardNameInput.getText();
             int cardV = Integer.parseInt(cardValueInput.getText());
-            cardNameInput.setText("");
-            cardValueInput.setText("");
+            resetInputBox();
 
             Card card = new Card(cardN, cardV);
             deck.addCard(card);
@@ -164,18 +167,39 @@ public class SetupGUI extends JFrame implements ActionListener {
             SwingUtilities.updateComponentTreeUI(panel);
 
         } else if (e.getSource() == beginButton) {
-            for (int i = 0; i < deck.getSize(); i++) {
-                System.out.print(deck.getCardName(i) + ", ");
-            }
-            System.out.println();
-            for (int i = 0; i < deck.getSize(); i++) {
-                System.out.print(deck.getCardValue(i) + ", ");
-            }
-            System.out.println();
+//            for (int i = 0; i < deck.getSize(); i++) {
+//                System.out.print(deck.getCardName(i) + ", ");
+//            }
+//            System.out.println();
+//            for (int i = 0; i < deck.getSize(); i++) {
+//                System.out.print(deck.getCardValue(i) + ", ");
+//            }
+//            System.out.println();
 
-            System.out.println("Betting Begins");
-            frame.dispose();
-            BetGUI betGUI = new BetGUI(deck);
+            if (deck.getSize() < 4) {
+                resetInputBox();
+                panel.add(tryAgain());
+                SwingUtilities.updateComponentTreeUI(panel);
+            } else {
+                System.out.println("Betting Begins");
+                frame.dispose();
+                BetGUI betGUI = new BetGUI(deck, player);
+            }
         }
+    }
+
+    private JLabel tryAgain() {
+        JLabel label = new JLabel();
+        label.setText("Please add enough cards to the deck");
+        label.setFont(new Font("Mononess", Font.PLAIN, 8));
+        label.setForeground(new Color(220, 20, 60));
+        label.setBounds(widthSetup / 2 - 110, 245, 350, 100);
+        label.setBackground(Color.white);
+        return label;
+    }
+
+    private void resetInputBox() {
+        cardNameInput.setText("");
+        cardValueInput.setText("");
     }
 }

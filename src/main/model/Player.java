@@ -120,16 +120,16 @@ public class Player implements Writable {
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
-        json.put("value", value);
-        json.put("money", money);
+        json.put("value", this.value);
+        json.put("money", this.money);
         json.put("playerCards", cardsToJson());
-        json.put("bet", bet);
+        json.put("bet", this.bet);
         return json;
     }
 
     private JSONArray cardsToJson() {
         JSONArray jsonArray = new JSONArray();
-        for (Card c : playerCards) {
+        for (Card c : this.playerCards) {
             jsonArray.put(c.toJson());
         }
         return jsonArray;

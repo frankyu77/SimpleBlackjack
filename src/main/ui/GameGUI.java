@@ -1,7 +1,11 @@
 package ui;
 
 import model.*;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 import javax.swing.*;
@@ -18,14 +22,23 @@ public class GameGUI extends JFrame implements ActionListener {
     private final int widthSmall = 600;
     private final int heightSmall = 400;
 
+    private JsonWriter jsonWriter;
+
     private JPanel playerPanel;
     private JPanel dealerPanel;
     private JFrame gameFrame;
+    private JFrame drawFrame = new JFrame();
+    private JFrame playerBJFrame = new JFrame();
+    private JFrame dealerBJFrame = new JFrame();
+    private JFrame loseFrame = new JFrame();
+    private JFrame winFrame = new JFrame();
+    private JFrame deckTooSmallFrame = new JFrame();
 
     //TODO: implement buttons - quit and playAgain button #######################################################
     private JButton hitButton;
     private JButton stayButton;
     private JButton saveButton;
+    private JButton bigSaveButton;
     private JButton playAgainButton;
     private JButton quitButton;
 
@@ -35,23 +48,24 @@ public class GameGUI extends JFrame implements ActionListener {
     private Dealer dealer = new Dealer();
 
     private int numberOfTimesHit = 3;
+    private final int noMoney = 1;
 
 
-
-    public GameGUI(DeckOfCards cards, Player p) {
+    public GameGUI(DeckOfCards cards, Player p, Dealer d, Game g, int n) throws FileNotFoundException {
         deck = cards;
         player = p;
+        dealer = d;
+        game = g;
+        numberOfTimesHit = n;
         game.setDeckOfCards(deck);
+        game.setPlayer(player);
+        game.setDealer(dealer);
 
         ImageIcon image = new ImageIcon("src/BlackJack.png");
         ImageIcon newImg = getCardImage();
 
         //label = new JLabel();
         gameFrame = new JFrame();
-
-        player.setPlayerHand(game.firstTwoPlayerCards());
-        dealer.setDealerHand(game.firstTwoDealerCards());
-
 
         //PANELS
         playerPanel = getPlayerPanel(newImg, player.getPlayerHand());
@@ -77,6 +91,10 @@ public class GameGUI extends JFrame implements ActionListener {
 
         //frame.add(label);
         updateFrame();
+
+        handleBlackJack(game.whoWins(player, dealer));
+
+        jsonWriter = new JsonWriter(JSON_STORE);
     }
 
     private void updateFrame() {
@@ -189,15 +207,21 @@ public class GameGUI extends JFrame implements ActionListener {
         return button;
     }
 
+    private JButton getBigSaveButton() {
+        JButton button = new JButton("Save");
+        button.setBounds(widthSmall / 2 - 37, heightSmall / 2, 75, 50);
+        return button;
+    }
+
     private JButton getPlayAgainButton() {
         JButton button = new JButton("Play Again");
-        button.setBounds(widthSmall / 2 - 50, heightSmall / 2 + 10, 100, 50);
+        button.setBounds(widthSmall / 2 - 50, heightSmall / 2 + 110, 100, 50);
         return button;
     }
 
     private JButton getQuitButton() {
         JButton button = new JButton("Quit");
-        button.setBounds(widthSmall / 2 - 37, heightSmall / 2 - 50, 75, 50);
+        button.setBounds(widthSmall / 2 - 37, heightSmall / 2 + 55, 75, 50);
         return button;
     }
 
@@ -206,89 +230,163 @@ public class GameGUI extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        //TODO 1: HANDLE IF FIRST TWO CARDS DEALT IS A BJ #############################################################
+        //TODO 1: handle not enough cards left
         if (e.getSource() == hitButton) {
             numberOfTimesHit++;
-            player.playerHits(numberOfTimesHit, deck);
 
-            gameFrame.remove(playerPanel);
-            playerPanel = getPlayerPanel(getCardImage(), player.getPlayerHand());
-            gameFrame.add(playerPanel);
-            SwingUtilities.updateComponentTreeUI(gameFrame);
-
-            if (game.playerGreaterThan21(player)) {
+            if (numberOfTimesHit > game.getDeck().getSize() - 1) {
                 gameFrame.dispose();
-                Color bkgColor = new Color(40,40,43);
-                Color wordColor = new Color(220, 20, 60);
-                endFrame("You Lost", "Lose", bkgColor, wordColor);
-            }
+                deckTooSmallFrame = notEnoughCardsFrame();
+            } else {
+                player.playerHits(numberOfTimesHit, deck);
+                gameFrame.remove(playerPanel);
+                playerPanel = getPlayerPanel(getCardImage(), player.getPlayerHand());
+                gameFrame.add(playerPanel);
+                SwingUtilities.updateComponentTreeUI(gameFrame);
+//TODO: *****************************************************************************************************
+                if (game.playerGreaterThan21(player)) {
+                    gameFrame.dispose();
+                    Color bkgColor = new Color(40, 40, 43);
+                    Color wordColor = new Color(220, 20, 60);
+                    if (player.getBalance() <= 0) {
+                        loseFrame = endFrame("No More Money :(", "No Money", bkgColor, wordColor, noMoney);
+                    } else {
+                        loseFrame = endFrame("You Lost", "Lose", bkgColor, wordColor, 0);
+                    }
+                }
 
-            System.out.println("Player hits!");
+                System.out.println("Player hits!");
+            }
         } else if (e.getSource() == stayButton) {
             while (dealer.getValue() <= 17) {
                 numberOfTimesHit++;
-                dealer.dealerHits(numberOfTimesHit, deck);
+                if (numberOfTimesHit > game.getDeck().getSize() - 1) {
+                    gameFrame.dispose();
+                    deckTooSmallFrame = notEnoughCardsFrame();
+                    break;
+                } else {
+                    dealer.dealerHits(numberOfTimesHit, deck);
 
-                gameFrame.remove(dealerPanel);
-                dealerPanel = getDealerPanel(getCardImage(), dealer.getDealerHand());
-                gameFrame.add(dealerPanel);
-                SwingUtilities.updateComponentTreeUI(gameFrame);
+                    gameFrame.remove(dealerPanel);
+                    dealerPanel = getDealerPanel(getCardImage(), dealer.getDealerHand());
+                    gameFrame.add(dealerPanel);
+                    SwingUtilities.updateComponentTreeUI(gameFrame);
+                }
             }
-
-            int n = game.whoWins(player, dealer);
-            if (n == DRAW) {
-                player.playerMoney(n, player.getBet());
-                gameFrame.dispose();
-                Color bkgColor = new Color(255, 215, 0);
-                Color wordColor = new Color(40,40,43);
-                endFrame("Draw!", "Draw", bkgColor, wordColor);
-
-            } else if (n == PBJ) {
-                player.playerMoney(n, player.getBet());
-                gameFrame.dispose();
-                Color bkgColor = new Color(50,205,50);
-                Color wordColor = new Color(40,40,43);
-                endFrame("You win with Blackjack!", "Player Blackjack", bkgColor, wordColor);
-
-            } else if (n == DBJ) {
-                player.playerMoney(n, player.getBet());
-                gameFrame.dispose();
-                Color bkgColor = new Color(40,40,43);
-                Color wordColor = new Color(220, 20, 60);
-                endFrame("Dealer wins with Blackjack", "Dealer Blackjack", bkgColor, wordColor);
-
-            } else if (n == LOSE) {
-                player.playerMoney(n, player.getBet());
-                gameFrame.dispose();
-                Color bkgColor = new Color(40,40,43);
-                Color wordColor = new Color(220, 20, 60);
-                endFrame("You Lost", "Lose", bkgColor, wordColor);
-
-            } else if (n == WIN) {
-                player.playerMoney(n, player.getBet());
-                gameFrame.dispose();
-                Color bkgColor = new Color(50,205,50);
-                Color wordColor = new Color(40,40,43);
-                endFrame("You Win!", "Win", bkgColor, wordColor);
-
+            if (numberOfTimesHit < game.getDeck().getSize()) {
+                int n = game.whoWins(player, dealer);
+                handleWinLoseDraw(n);
             }
 
             System.out.println("Player stays!");
-        } else if (e.getSource() == saveButton) {
+        } else if (e.getSource() == saveButton || e.getSource() == bigSaveButton) {
             //TODO: SAVE BUTTON  #####################################################################################
+            disposeAllFrames();
+            try {
+                jsonWriter.open();
+                jsonWriter.write(game);
+                jsonWriter.close();
+                System.out.println("Saved deck to " + JSON_STORE);
+            } catch (FileNotFoundException fileNotFoundException) {
+                System.out.println("Unable to write to file: " + JSON_STORE);
+            }
+        } else if (e.getSource() == quitButton) {
+            disposeAllFrames();
+            System.out.println("Quitting");
+        } else if (e.getSource() == playAgainButton) {
+            disposeAllFrames();
 
-            System.out.println("Saving...");
+            SetupGUI setupGUI = new SetupGUI(player);
+            System.out.println("Playing again");
         }
     }
 
+    private void disposeAllFrames() {
+        drawFrame.dispose();
+        playerBJFrame.dispose();
+        dealerBJFrame.dispose();
+        loseFrame.dispose();
+        winFrame.dispose();
+        gameFrame.dispose();
+        deckTooSmallFrame.dispose();
+    }
+
+    //************************************** WIN/LOSE/DRAW FRAME *******************************************************
+    private void handleWinLoseDraw(int n) {
+        if (n == DRAW) {
+            player.playerMoney(n, player.getBet());
+            gameFrame.dispose();
+            Color bkgColor = new Color(255, 215, 0);
+            Color wordColor = new Color(40,40,43);
+            drawFrame = endFrame("Draw!", "Draw", bkgColor, wordColor, 0);
+
+        } else if (n == LOSE) {
+            player.playerMoney(n, player.getBet());
+            gameFrame.dispose();
+            Color bkgColor = new Color(40, 40, 43);
+            Color wordColor = new Color(220, 20, 60);
+
+            if (player.getBalance() <= 0) {
+                drawFrame = endFrame("No More Money :(", "No Money", bkgColor, wordColor, noMoney);
+            } else {
+                loseFrame = endFrame("You Lost", "Lose", bkgColor, wordColor, 0);
+            }
+
+        } else if (n == WIN) {
+            player.playerMoney(n, player.getBet());
+            gameFrame.dispose();
+            Color bkgColor = new Color(50,205,50);
+            Color wordColor = new Color(40,40,43);
+            winFrame = endFrame("You Win!", "Win", bkgColor, wordColor, 0);
+        }
+    }
+
+    //************************************** NOT ENOUGH CARDS FRAME ****************************************************
+    private JFrame notEnoughCardsFrame() {
+        JFrame noCardsFrame = new JFrame();
+        JLabel frameStatement = new JLabel();
+
+        //frame title
+        frameStatement.setText("Not Enough Cards to Continue :(");
+        frameStatement.setBounds(0, heightSmall / 2 - 60, widthSmall, heightSmall);
+        frameStatement.setForeground(new Color(196, 196, 199));
+        frameStatement.setFont(new Font("Mononess", Font.PLAIN, 30));
+        frameStatement.setVerticalAlignment(JLabel.TOP);
+        frameStatement.setHorizontalAlignment(JLabel.CENTER);
+
+        //frame setup
+        noCardsFrame.setTitle("Not Enough Cards");
+        noCardsFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        noCardsFrame.setResizable(false);
+        noCardsFrame.setSize(widthSmall, heightSmall);
+        noCardsFrame.setLayout(null);
+        //color ****
+        noCardsFrame.setIconImage(getIconImage());
+        noCardsFrame.getContentPane().setBackground(new Color(40,40,43));
+
+        //buttons
+        quitButton = getQuitButton();
+        quitButton.addActionListener(this);
+
+        noCardsFrame.add(frameStatement);
+        noCardsFrame.add(quitButton);
+
+        noCardsFrame.setVisible(true);
+
+        return noCardsFrame;
+    }
+
+
 
     //********************************************* ENDING FRAME *******************************************************
-    private JFrame endFrame(String title, String frameTitle, Color back, Color front) {
+    private JFrame endFrame(String title, String frameTitle, Color back, Color front, int n) {
         JFrame frameEnd = new JFrame();
         JLabel frameStatement = new JLabel();
         JLabel moneyAfter = new JLabel();
+        JLabel dealerAmount = new JLabel();
+        JLabel playerAmount = new JLabel();
 
-        //lost title
+        //frame title
         frameStatement.setText(title);
         frameStatement.setBounds(0, 40, widthSmall, heightSmall);
         frameStatement.setForeground(front);
@@ -296,12 +394,29 @@ public class GameGUI extends JFrame implements ActionListener {
         frameStatement.setVerticalAlignment(JLabel.TOP);
         frameStatement.setHorizontalAlignment(JLabel.CENTER);
 
+        //dealerAmount
+        dealerAmount.setText("Dealer Total: " + dealer.getValue());
+        dealerAmount.setBounds(0, 100, widthSmall, heightSmall);
+        dealerAmount.setForeground(front);
+        dealerAmount.setFont(new Font("Mononess", Font.PLAIN, 20));
+        dealerAmount.setVerticalAlignment(JLabel.TOP);
+        dealerAmount.setHorizontalAlignment(JLabel.CENTER);
+
+        //playerAmount
+        playerAmount.setText("Player Total: " + player.getValue());
+        playerAmount.setBounds(0, 130, widthSmall, heightSmall);
+        playerAmount.setForeground(front);
+        playerAmount.setFont(new Font("Mononess", Font.PLAIN, 20));
+        playerAmount.setVerticalAlignment(JLabel.TOP);
+        playerAmount.setHorizontalAlignment(JLabel.CENTER);
+
+
         //money after lost
         double balance = player.playerMoney(LOSE, player.getBet());
         moneyAfter.setText("Remaining balance: $" + balance);
-        moneyAfter.setBounds(0, 80, widthSmall, heightSmall);
+        moneyAfter.setBounds(0, 160, widthSmall, heightSmall);
         moneyAfter.setForeground(front);
-        moneyAfter.setFont(new Font("Mononess", Font.PLAIN, 20));
+        moneyAfter.setFont(new Font("Mononess", Font.PLAIN, 15));
         moneyAfter.setVerticalAlignment(JLabel.TOP);
         moneyAfter.setHorizontalAlignment(JLabel.CENTER);
 
@@ -317,16 +432,49 @@ public class GameGUI extends JFrame implements ActionListener {
 
         //buttons
         playAgainButton = getPlayAgainButton();
+        playAgainButton.addActionListener(this);
         quitButton = getQuitButton();
+        quitButton.addActionListener(this);
+        bigSaveButton = getBigSaveButton();
+        bigSaveButton.addActionListener(this);
 
         frameEnd.add(frameStatement);
+        frameEnd.add(dealerAmount);
+        frameEnd.add(playerAmount);
         frameEnd.add(moneyAfter);
-        frameEnd.add(playAgainButton);
+        if (!(n == noMoney)) {
+            frameEnd.add(playAgainButton);
+            frameEnd.add(bigSaveButton);
+        }
         frameEnd.add(quitButton);
 
         frameEnd.setVisible(true);
 
         return frameEnd;
+    }
+
+    private JFrame handleBlackJack(int n) {
+        if (n == PBJ) {
+            player.playerMoney(n, player.getBet());
+            gameFrame.dispose();
+            Color bkgColor = new Color(50,205,50);
+            Color wordColor = new Color(40,40,43);
+            playerBJFrame = endFrame("You win with Blackjack!", "Player Blackjack", bkgColor, wordColor, 0);
+            return playerBJFrame;
+        } else if (n == DBJ) {
+            player.playerMoney(n, player.getBet());
+            gameFrame.dispose();
+            Color bkgColor = new Color(40,40,43);
+            Color wordColor = new Color(220, 20, 60);
+            if (player.getBalance() <= 0) {
+                dealerBJFrame = endFrame("No More Money :(", "No Money", bkgColor, wordColor, noMoney);
+            } else {
+                dealerBJFrame = endFrame("Dealer wins with Blackjack", "Dealer Blackjack", bkgColor, wordColor, 0);
+            }
+            return dealerBJFrame;
+        } else {
+            return new JFrame();
+        }
     }
 
 

@@ -1,19 +1,34 @@
 package ui;
 
+import model.Dealer;
+import model.Game;
+import model.Player;
+import persistence.JsonReader;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+
+import static ui.User.JSON_STORE;
 
 public class MainPageGUI extends JFrame implements ActionListener {
     private final int width = 1000;
     private final int height = 600;
-    JLabel label;
-    JFrame frame;
+    private JLabel label;
+    private JFrame frame;
 
-    JButton instButton;
-    JButton beginButton;
-    JButton loadButton;
+    private JButton instButton;
+    private JButton beginButton;
+    private JButton loadButton;
+
+    private JsonReader jsonReader;
+
+    private Game game;
+    private Player player;
+    private Dealer dealer;
+    private int numberOfTimesHit;
 
     public MainPageGUI() {
         ImageIcon image = new ImageIcon("src/BlackJack.png");
@@ -62,6 +77,12 @@ public class MainPageGUI extends JFrame implements ActionListener {
         frame.add(label);
 
         frame.setVisible(true);
+
+        jsonReader = new JsonReader(JSON_STORE);
+        game = new Game();
+        player = new Player();
+        dealer = new Dealer();
+        numberOfTimesHit = 0;
     }
 
     public JButton instructionsButton() {
@@ -91,9 +112,26 @@ public class MainPageGUI extends JFrame implements ActionListener {
         } else if (e.getSource() == beginButton) {
             System.out.println("Setup Begun");
             frame.dispose();
-            SetupGUI setupGUI = new SetupGUI();
+            SetupGUI setupGUI = new SetupGUI(new Player());
         } else if (e.getSource() == loadButton) {
+            frame.dispose();
+            loadWorkRoom();
             System.out.println("Loaded Game");
+        }
+    }
+
+    private void loadWorkRoom() {
+        try {
+            game = jsonReader.read();
+            player = game.getPlayer();
+            dealer = game.getDealer();
+            numberOfTimesHit = player.getSize() + dealer.getSize() - 1;
+
+            GameGUI gameGUI = new GameGUI(game.getDeck(), player, dealer, game, numberOfTimesHit);
+
+            System.out.println("Loaded deck from " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
         }
     }
 }

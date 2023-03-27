@@ -1,12 +1,15 @@
 package ui;
 
+import model.Dealer;
 import model.DeckOfCards;
+import model.Game;
 import model.Player;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 
 //TODO: HANDLE IF USER ENTERS IN TOO MUCH MONEY ########################################################################
 public class BetGUI extends JFrame implements ActionListener {
@@ -22,7 +25,7 @@ public class BetGUI extends JFrame implements ActionListener {
     Player player;
     DeckOfCards cards;
 
-    public BetGUI(DeckOfCards deck) {
+    public BetGUI(DeckOfCards deck, Player p) {
         cards = deck;
         ImageIcon image = new ImageIcon("src/BlackJack.png");
         frame = new JFrame();
@@ -31,7 +34,7 @@ public class BetGUI extends JFrame implements ActionListener {
         amountBetted = new JTextField(10);
         beginButton = new JButton();
 
-        player = new Player();
+        player = p;
 
         //currentMoney label
         currentMoney.setText("Current Balance: $" + player.getBalance());
@@ -78,12 +81,38 @@ public class BetGUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == beginButton) {
             double bet = Integer.parseInt(amountBetted.getText());
-            player.setBet(bet);
-            player.betMade(bet);
 
-            System.out.println("Game begun");
-            frame.dispose();
-            GameGUI gameGUI = new GameGUI(cards, player);
+            if (bet > player.getBalance()) {
+                amountBetted.setText("");
+                frame.add(tryAgain());
+                SwingUtilities.updateComponentTreeUI(frame);
+            } else {
+                Dealer dealer = new Dealer();
+                Game game = new Game();
+                game.setDeckOfCards(cards);
+                player.setBet(bet);
+                player.betMade(bet);
+                player.setPlayerHand(game.firstTwoPlayerCards());
+                dealer.setDealerHand(game.firstTwoDealerCards());
+
+                System.out.println("Game begun");
+                frame.dispose();
+                try {
+                    GameGUI gameGUI = new GameGUI(cards, player, dealer, game, 3);
+                } catch (FileNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
         }
+    }
+
+    private JLabel tryAgain() {
+        JLabel label = new JLabel();
+        label.setText("You don't have that amount of money :p");
+        label.setFont(new Font("Mononess", Font.PLAIN, 8));
+        label.setForeground(new Color(40, 40, 43));
+        label.setBounds(widthSetup / 2 - 110, heightSetup / 3 + 50, 350, 100);
+        label.setBackground(Color.white);
+        return label;
     }
 }

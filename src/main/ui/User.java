@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 // Handles all interface related outputs and inputs
 public class User {
-    private static final String JSON_STORE = "./data/Game.json";
+    static final String JSON_STORE = "./data/Game.json";
     private DeckOfCards deck1;
     private Game game;
     private int numberOfTimesHit = 3;
