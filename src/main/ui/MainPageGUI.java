@@ -17,11 +17,13 @@ public class MainPageGUI extends JFrame implements ActionListener {
     private final int width = 1000;
     private final int height = 600;
     private JLabel label;
+    private JLabel moneyAdded;
     private JFrame frame;
 
     private JButton instButton;
     private JButton beginButton;
     private JButton loadButton;
+    private JButton loadMoney;
 
     private JsonReader jsonReader;
 
@@ -41,15 +43,7 @@ public class MainPageGUI extends JFrame implements ActionListener {
         ImageIcon newImg = new ImageIcon(imgScale);
 
         //adding image to label ****
-        label.setIcon(newImg);
-        label.setText("Welcome to Blackjack!");
-        label.setBounds(0, 115, width, height);
-        label.setHorizontalTextPosition(JLabel.CENTER);
-        label.setVerticalTextPosition(JLabel.TOP);
-        label.setForeground(new Color(224, 225, 228));
-        label.setFont(new Font("Mononess", Font.PLAIN, 40));
-        label.setVerticalAlignment(JLabel.TOP);
-        label.setHorizontalAlignment(JLabel.CENTER);
+        setupTitle(newImg);
 
         //setting up the frame ****
         frame.setTitle("BlackJack");
@@ -63,19 +57,9 @@ public class MainPageGUI extends JFrame implements ActionListener {
         frame.getContentPane().setBackground(new Color(136, 8, 8));
 
         //buttons ****
-        instButton = instructionsButton();
-        instButton.addActionListener(this);
-        beginButton = beginGameButton();
-        beginButton.addActionListener(this);
-        loadButton = loadGameButton();
-        loadButton.addActionListener(this);
+        addButtons();
 
-
-        frame.add(instButton);
-        frame.add(beginButton);
-        frame.add(loadButton);
-        frame.add(label);
-
+        addEverythingToFrame();
         frame.setVisible(true);
 
         jsonReader = new JsonReader(JSON_STORE);
@@ -85,21 +69,58 @@ public class MainPageGUI extends JFrame implements ActionListener {
         numberOfTimesHit = 0;
     }
 
+    private void addEverythingToFrame() {
+        frame.add(instButton);
+        frame.add(beginButton);
+        frame.add(loadButton);
+        frame.add(loadMoney);
+        frame.add(label);
+    }
+
+    private void addButtons() {
+        instButton = instructionsButton();
+        instButton.addActionListener(this);
+        beginButton = beginGameButton();
+        beginButton.addActionListener(this);
+        loadButton = loadGameButton();
+        loadButton.addActionListener(this);
+        loadMoney = getLoadMoneyButton();
+        loadMoney.addActionListener(this);
+    }
+
+    private void setupTitle(ImageIcon newImg) {
+        label.setIcon(newImg);
+        label.setText("Welcome to Blackjack!");
+        label.setBounds(0, 115, width, height);
+        label.setHorizontalTextPosition(JLabel.CENTER);
+        label.setVerticalTextPosition(JLabel.TOP);
+        label.setForeground(new Color(224, 225, 228));
+        label.setFont(new Font("Mononess", Font.PLAIN, 40));
+        label.setVerticalAlignment(JLabel.TOP);
+        label.setHorizontalAlignment(JLabel.CENTER);
+    }
+
     public JButton instructionsButton() {
         JButton button = new JButton("Instructions");
-        button.setBounds(width / 2 - 86, height / 2 + 100, 175, 50);
+        button.setBounds(width / 2 - 86, height / 2 + 150, 175, 50);
         return button;
     }
 
     public JButton loadGameButton() {
         JButton button = new JButton("Load Game");
-        button.setBounds(width / 2 - 74, height / 2 + 40, 150, 50);
+        button.setBounds(width / 2 - 74, height / 2 + 90, 150, 50);
+        return button;
+    }
+
+    public JButton getLoadMoneyButton() {
+        JButton button = new JButton("Load Money");
+        button.setBounds(width / 2 - 74, height / 2 + 30, 150, 50);
         return button;
     }
 
     public JButton beginGameButton() {
         JButton button = new JButton("Begin Game");
-        button.setBounds(width / 2 - 74, height / 2 - 20, 150, 50);
+        button.setBounds(width / 2 - 74, height / 2 - 30, 150, 50);
         return button;
     }
 
@@ -112,11 +133,41 @@ public class MainPageGUI extends JFrame implements ActionListener {
         } else if (e.getSource() == beginButton) {
             System.out.println("Setup Begun");
             frame.dispose();
-            SetupGUI setupGUI = new SetupGUI(new Player());
+            SetupGUI setupGUI = new SetupGUI(player);
         } else if (e.getSource() == loadButton) {
             frame.dispose();
             loadWorkRoom();
             System.out.println("Loaded Game");
+        } else if (e.getSource() == loadMoney) {
+            loadMoneyWorkRoom();
+            moneyAdded = moneyLoadedLabel();
+            frame.add(moneyAdded);
+            SwingUtilities.updateComponentTreeUI(frame);
+            loadButton.setEnabled(false);
+        }
+    }
+
+    private JLabel moneyLoadedLabel() {
+        JLabel label = new JLabel();
+        label.setText("Money loaded :D");
+        label.setFont(new Font("Mononess", Font.PLAIN, 15));
+        label.setForeground(new Color(224, 225, 228));
+        label.setBounds(width - 135, height - 50, 150, 20);
+        label.setBackground(Color.white);
+        return label;
+    }
+
+    private void loadMoneyWorkRoom() {
+        try {
+            game = jsonReader.read();
+            player = game.getPlayer();
+            double money = player.getBalance();
+            Player p = new Player();
+            p.setMoney(money);
+
+            System.out.println("Loaded deck from " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
         }
     }
 

@@ -42,22 +42,6 @@ public class JsonReader {
 
     // EFFECTS: parses workroom from JSON object and returns it
     private Game parseGame(JSONObject jsonObject) {
-        /*JSONArray deckOfCards = jsonObject.getJSONArray("deckOfCards");
-        JSONObject player = jsonObject.getJSONObject("player");
-        JSONObject dealer = jsonObject.getJSONObject("dealer");
-        Game game = new Game(deckOfCards, player, dealer);
-        addCard(deckOfCards, jsonObject);
-        return Game; */
-//        DeckOfCards deck = new DeckOfCards();
-//        Player p = new Player();
-//        Dealer d = new Dealer();
-//        JSONObject player = jsonObject.getJSONObject("player");
-//        JSONObject dealer = jsonObject.getJSONObject("dealer");
-//        JSONObject deckOfCards = jsonObject.getJSONObject("deck");
-//        Player player = parsePlayer(jsonObject);
-//        Dealer dealer = parseDealer(jsonObject);
-//        DeckOfCards deck = parseDeckOfCards(jsonObject);
-
         Game game = new Game();
         JSONObject player = jsonObject.getJSONObject("player");
         JSONObject dealer = jsonObject.getJSONObject("dealer");
@@ -68,22 +52,6 @@ public class JsonReader {
 
         return game;
     }
-
-//    private void addPlayer(Game game, JSONObject jsonPlayer) {
-//        JSONArray playerCards = jsonPlayer.getJSONArray("playerCards");
-//        for (Object card : playerCards) {
-//            JSONObject nextCard = (JSONObject) card;
-//            addPlayerCard(player, nextCard);
-//        }
-//        addPlayerValue(player, jsonPlayer);
-//    }
-
-//    private Player parsePlayer(JSONObject jsonObject) {
-//
-//        Player player = new Player();
-//
-//    }
-
     private void addPlayer(Game game, JSONObject jsonObject) {
         int value = jsonObject.getInt("value");
         double playerMoney = jsonObject.getDouble("money");
@@ -122,14 +90,6 @@ public class JsonReader {
 
         game.setDealer(dealer);
     }
-
-//    private void addDealer(Dealer dealer, JSONObject jsonDealer) {
-//        JSONArray dealerCards = jsonDealer.getJSONArray("dealerCards");
-//        for (Object card : dealerCards) {
-//            JSONObject nextCard = (JSONObject) card;
-//            addDealerCard(dealer, nextCard);
-//        }
-//    }
 
     private void addDealerCards(Dealer dealer, JSONObject jsonObject) {
         JSONArray dealerCards = jsonObject.getJSONArray("dealerCards");

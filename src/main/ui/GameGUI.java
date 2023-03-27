@@ -1,11 +1,9 @@
 package ui;
 
 import model.*;
-import persistence.JsonReader;
 import persistence.JsonWriter;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.List;
 
 import javax.swing.*;
@@ -16,6 +14,7 @@ import java.awt.event.ActionListener;
 import static ui.User.*;
 
 public class GameGUI extends JFrame implements ActionListener {
+    static final String JSON_MONEY = "./data/Money.json";
     private final int width = 1000;
     private final int height = 600;
 
@@ -34,7 +33,6 @@ public class GameGUI extends JFrame implements ActionListener {
     private JFrame winFrame = new JFrame();
     private JFrame deckTooSmallFrame = new JFrame();
 
-    //TODO: implement buttons - quit and playAgain button #######################################################
     private JButton hitButton;
     private JButton stayButton;
     private JButton saveButton;
@@ -71,7 +69,6 @@ public class GameGUI extends JFrame implements ActionListener {
         playerPanel = getPlayerPanel(newImg, player.getPlayerHand());
         dealerPanel = getDealerPanel(newImg, dealer.getDealerHand());
 
-        //TODO: BUTTONS ###############################################################################################
         hitButton = getHitButton();
         hitButton.addActionListener(this);
         stayButton = getStayButton();
@@ -80,14 +77,7 @@ public class GameGUI extends JFrame implements ActionListener {
         saveButton.addActionListener(this);
 
         //setting up the frame ****
-        gameFrame.setTitle("Game");
-        gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        gameFrame.setResizable(false);
-        gameFrame.setSize(width, height);
-        gameFrame.setLayout(null);
-        //color ****
-        gameFrame.setIconImage(image.getImage());
-        gameFrame.getContentPane().setBackground(new Color(136, 8, 8));
+        setupEndFrame(gameFrame, "Game", width, height, image.getImage(), new Color(136, 8, 8));
 
         //frame.add(label);
         updateFrame();
@@ -229,11 +219,8 @@ public class GameGUI extends JFrame implements ActionListener {
     //************************************************ ACTION PERFORMED ************************************************
     @Override
     public void actionPerformed(ActionEvent e) {
-
-        //TODO 1: handle not enough cards left
         if (e.getSource() == hitButton) {
             numberOfTimesHit++;
-
             if (numberOfTimesHit > game.getDeck().getSize() - 1) {
                 gameFrame.dispose();
                 deckTooSmallFrame = notEnoughCardsFrame();
@@ -243,7 +230,6 @@ public class GameGUI extends JFrame implements ActionListener {
                 playerPanel = getPlayerPanel(getCardImage(), player.getPlayerHand());
                 gameFrame.add(playerPanel);
                 SwingUtilities.updateComponentTreeUI(gameFrame);
-//TODO: *****************************************************************************************************
                 if (game.playerGreaterThan21(player)) {
                     gameFrame.dispose();
                     Color bkgColor = new Color(40, 40, 43);
@@ -280,7 +266,6 @@ public class GameGUI extends JFrame implements ActionListener {
 
             System.out.println("Player stays!");
         } else if (e.getSource() == saveButton || e.getSource() == bigSaveButton) {
-            //TODO: SAVE BUTTON  #####################################################################################
             disposeAllFrames();
             try {
                 jsonWriter.open();
@@ -347,22 +332,12 @@ public class GameGUI extends JFrame implements ActionListener {
         JLabel frameStatement = new JLabel();
 
         //frame title
-        frameStatement.setText("Not Enough Cards to Continue :(");
-        frameStatement.setBounds(0, heightSmall / 2 - 60, widthSmall, heightSmall);
-        frameStatement.setForeground(new Color(196, 196, 199));
-        frameStatement.setFont(new Font("Mononess", Font.PLAIN, 30));
-        frameStatement.setVerticalAlignment(JLabel.TOP);
-        frameStatement.setHorizontalAlignment(JLabel.CENTER);
+        setupLabelTitles(frameStatement, "Not Enough Cards to Continue :(", heightSmall / 2 - 60,
+                new Color(196, 196, 199), 30);
 
         //frame setup
-        noCardsFrame.setTitle("Not Enough Cards");
-        noCardsFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        noCardsFrame.setResizable(false);
-        noCardsFrame.setSize(widthSmall, heightSmall);
-        noCardsFrame.setLayout(null);
-        //color ****
-        noCardsFrame.setIconImage(getIconImage());
-        noCardsFrame.getContentPane().setBackground(new Color(40,40,43));
+        setupEndFrame(noCardsFrame, "Not Enough Cards", widthSmall, heightSmall, getIconImage(),
+                new Color(40, 40, 43));
 
         //buttons
         quitButton = getQuitButton();
@@ -376,8 +351,6 @@ public class GameGUI extends JFrame implements ActionListener {
         return noCardsFrame;
     }
 
-
-
     //********************************************* ENDING FRAME *******************************************************
     private JFrame endFrame(String title, String frameTitle, Color back, Color front, int n) {
         JFrame frameEnd = new JFrame();
@@ -387,48 +360,20 @@ public class GameGUI extends JFrame implements ActionListener {
         JLabel playerAmount = new JLabel();
 
         //frame title
-        frameStatement.setText(title);
-        frameStatement.setBounds(0, 40, widthSmall, heightSmall);
-        frameStatement.setForeground(front);
-        frameStatement.setFont(new Font("Mononess", Font.PLAIN, 30));
-        frameStatement.setVerticalAlignment(JLabel.TOP);
-        frameStatement.setHorizontalAlignment(JLabel.CENTER);
+        setupLabelTitles(frameStatement, title, 40, front, 30);
 
         //dealerAmount
-        dealerAmount.setText("Dealer Total: " + dealer.getValue());
-        dealerAmount.setBounds(0, 100, widthSmall, heightSmall);
-        dealerAmount.setForeground(front);
-        dealerAmount.setFont(new Font("Mononess", Font.PLAIN, 20));
-        dealerAmount.setVerticalAlignment(JLabel.TOP);
-        dealerAmount.setHorizontalAlignment(JLabel.CENTER);
+        setupLabelTitles(dealerAmount, "Dealer Total: " + dealer.getValue(), 100, front, 20);
 
         //playerAmount
-        playerAmount.setText("Player Total: " + player.getValue());
-        playerAmount.setBounds(0, 130, widthSmall, heightSmall);
-        playerAmount.setForeground(front);
-        playerAmount.setFont(new Font("Mononess", Font.PLAIN, 20));
-        playerAmount.setVerticalAlignment(JLabel.TOP);
-        playerAmount.setHorizontalAlignment(JLabel.CENTER);
-
+        setupLabelTitles(playerAmount, "Player Total: " + player.getValue(), 130, front, 20);
 
         //money after lost
         double balance = player.playerMoney(LOSE, player.getBet());
-        moneyAfter.setText("Remaining balance: $" + balance);
-        moneyAfter.setBounds(0, 160, widthSmall, heightSmall);
-        moneyAfter.setForeground(front);
-        moneyAfter.setFont(new Font("Mononess", Font.PLAIN, 15));
-        moneyAfter.setVerticalAlignment(JLabel.TOP);
-        moneyAfter.setHorizontalAlignment(JLabel.CENTER);
+        setupLabelTitles(moneyAfter, "Remaining balance: $" + balance, 160, front, 15);
 
         //frame setup
-        frameEnd.setTitle(frameTitle);
-        frameEnd.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frameEnd.setResizable(false);
-        frameEnd.setSize(widthSmall, heightSmall);
-        frameEnd.setLayout(null);
-        //color ****
-        frameEnd.setIconImage(getIconImage());
-        frameEnd.getContentPane().setBackground(back);
+        setupEndFrame(frameEnd, frameTitle, widthSmall, heightSmall, getIconImage(), back);
 
         //buttons
         playAgainButton = getPlayAgainButton();
@@ -438,6 +383,15 @@ public class GameGUI extends JFrame implements ActionListener {
         bigSaveButton = getBigSaveButton();
         bigSaveButton.addActionListener(this);
 
+        addEverythingToEndFrame(n, frameEnd, frameStatement, moneyAfter, dealerAmount, playerAmount);
+
+        frameEnd.setVisible(true);
+
+        return frameEnd;
+    }
+
+    private void addEverythingToEndFrame(int n, JFrame frameEnd, JLabel frameStatement, JLabel moneyAfter,
+                                         JLabel dealerAmount, JLabel playerAmount) {
         frameEnd.add(frameStatement);
         frameEnd.add(dealerAmount);
         frameEnd.add(playerAmount);
@@ -447,10 +401,27 @@ public class GameGUI extends JFrame implements ActionListener {
             frameEnd.add(bigSaveButton);
         }
         frameEnd.add(quitButton);
+    }
 
-        frameEnd.setVisible(true);
+    private void setupEndFrame(JFrame frameEnd, String frameTitle, int widthSmall, int heightSmall,
+                               Image iconImage, Color back) {
+        frameEnd.setTitle(frameTitle);
+        frameEnd.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frameEnd.setResizable(false);
+        frameEnd.setSize(widthSmall, heightSmall);
+        frameEnd.setLayout(null);
+        //color ****
+        frameEnd.setIconImage(iconImage);
+        frameEnd.getContentPane().setBackground(back);
+    }
 
-        return frameEnd;
+    private void setupLabelTitles(JLabel frameStatement, String title, int y, Color front, int size) {
+        frameStatement.setText(title);
+        frameStatement.setBounds(0, y, widthSmall, heightSmall);
+        frameStatement.setForeground(front);
+        frameStatement.setFont(new Font("Mononess", Font.PLAIN, size));
+        frameStatement.setVerticalAlignment(JLabel.TOP);
+        frameStatement.setHorizontalAlignment(JLabel.CENTER);
     }
 
     private JFrame handleBlackJack(int n) {

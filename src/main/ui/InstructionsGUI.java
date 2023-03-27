@@ -31,47 +31,47 @@ public class InstructionsGUI extends JFrame implements ActionListener {
         title.setHorizontalAlignment(JLabel.CENTER);
 
         //setup instructions
-        instructions1.setBounds(50, 90, 700, 115);
-        instructions1.setFont(new Font("Mononess", Font.PLAIN, 14));
-        instructions1.setBackground(new Color(81, 80, 77));
-        instructions1.setForeground(new Color(224, 225, 228));
-        instructions1.setLineWrap(true);
-        instructions1.setEditable(false);
-
-        instructions2.setBounds(50, 210, 700, 115);
-        instructions2.setFont(new Font("Mononess", Font.PLAIN, 14));
-        instructions2.setBackground(new Color(81, 80, 77));
-        instructions2.setForeground(new Color(224, 225, 228));
-        instructions2.setLineWrap(true);
-        instructions2.setEditable(false);
-
-        instructions3.setBounds(50, 310, 700, 100);
-        instructions3.setFont(new Font("Mononess", Font.PLAIN, 14));
-        instructions3.setBackground(new Color(81, 80, 77));
-        instructions3.setForeground(new Color(224, 225, 228));
-        instructions3.setLineWrap(true);
-        instructions3.setEditable(false);
+        setupInstructions(instructions1, 90, 115);
+        setupInstructions(instructions2, 210, 115);
+        setupInstructions(instructions3, 310, 100);
 
         //setup new frame
+        setupFrame();
+
+        //button
+        back = backButton();
+        back.addActionListener(this);
+
+        addEverythingToFrame();
+
+
+        frame.setVisible(true);
+    }
+
+    private void setupFrame() {
         frame.setTitle("Instructions");
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(width1, height1);
         frame.setLayout(null);
         frame.getContentPane().setBackground(new Color(81, 80, 77));
+    }
 
-        //button
-        back = backButton();
-        back.addActionListener(this);
-
+    private void addEverythingToFrame() {
         frame.add(instructions3);
         frame.add(title);
         frame.add(back);
         frame.add(instructions1);
         frame.add(instructions2);
+    }
 
-
-        frame.setVisible(true);
+    private void setupInstructions(JTextArea instructions1, int y, int height) {
+        instructions1.setBounds(50, y, 700, height);
+        instructions1.setFont(new Font("Mononess", Font.PLAIN, 14));
+        instructions1.setBackground(new Color(81, 80, 77));
+        instructions1.setForeground(new Color(224, 225, 228));
+        instructions1.setLineWrap(true);
+        instructions1.setEditable(false);
     }
 
     private String theInstructions1() {

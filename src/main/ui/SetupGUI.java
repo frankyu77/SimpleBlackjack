@@ -34,7 +34,6 @@ public class SetupGUI extends JFrame implements ActionListener {
 
     public SetupGUI(Player p) {
         player = p;
-
         ImageIcon image = new ImageIcon("src/BlackJack.png");
         panel = new JPanel();
         cardName = new JLabel();
@@ -48,34 +47,47 @@ public class SetupGUI extends JFrame implements ActionListener {
         smallMessage = getSmallMessage();
 
         //Add Card button
-        addCardButton = getAddCardButton();
-        addCardButton.addActionListener(this);
-
-        //Begin Game button
-        beginButton = getBeginButton();
-        beginButton.addActionListener(this);
-
+        setupButtons();
 
         //cardName label
-        cardName.setText("Card Name:");
-        cardName.setFont(new Font("Mononess", Font.PLAIN, 15));
-        cardName.setForeground(new Color(40, 40, 43));
-        cardName.setBounds(widthSetup / 2 - 110, heightSetup / 3 + 15, 100, 25);
-        //cardNameInput
-        cardNameInput.setBounds(widthSetup / 2 - 27, heightSetup / 3 + 15, 165, 25);
+        setupTitleAndInput(cardName, "Card Name:", 15, cardNameInput);
 
         //cardValue label
-        cardValue.setText("Card Value:");
-        cardValue.setFont(new Font("Mononess", Font.PLAIN, 15));
-        cardValue.setForeground(new Color(40, 40, 43));
-        cardValue.setBounds(widthSetup / 2 - 110, heightSetup / 3 + 60, 100, 25);
-        //cardNameInput
-        cardValueInput.setBounds(widthSetup / 2 - 27, heightSetup / 3 + 60, 165, 25);
+        setupTitleAndInput(cardValue, "Card Value:", 60, cardValueInput);
 
         //cards added so far
         cardsAddedSoFar = getCardsAddedSoFar();
 
         //setup panel
+        addEverythingToPanel();
+
+        //setting up the frame ****
+        setupFrame(image);
+
+        frame.add(panel);
+        frame.setVisible(true);
+
+    }
+
+    private void setupButtons() {
+        addCardButton = getAddCardButton();
+        addCardButton.addActionListener(this);
+        beginButton = getBeginButton();
+        beginButton.addActionListener(this);
+    }
+
+    private void setupFrame(ImageIcon image) {
+        frame.setTitle("Setup");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(false);
+        frame.setSize(widthSetup, heightSetup);
+        frame.setLayout(null);
+        //color ****
+        frame.setIconImage(image.getImage());
+        frame.getContentPane().setBackground(new Color(196, 196, 199));
+    }
+
+    private void addEverythingToPanel() {
         panel.setBackground(null);
         panel.setBounds(0,0, widthSetup, heightSetup);
         panel.setLayout(null);
@@ -88,21 +100,15 @@ public class SetupGUI extends JFrame implements ActionListener {
         panel.add(addCardButton);
         panel.add(beginButton);
         panel.add(cardsAddedSoFar);
+    }
 
-        //setting up the frame ****
-        frame.setTitle("Setup");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
-        frame.setSize(widthSetup, heightSetup);
-        frame.setLayout(null);
-        //color ****
-        frame.setIconImage(image.getImage());
-        frame.getContentPane().setBackground(new Color(196, 196, 199));
-
-        frame.add(panel);
-
-        frame.setVisible(true);
-
+    private void setupTitleAndInput(JLabel cardName, String text, int x, JTextField cardNameInput) {
+        cardName.setText(text);
+        cardName.setFont(new Font("Mononess", Font.PLAIN, 15));
+        cardName.setForeground(new Color(40, 40, 43));
+        cardName.setBounds(widthSetup / 2 - 110, heightSetup / 3 + x, 100, 25);
+        //cardNameInput
+        cardNameInput.setBounds(widthSetup / 2 - 27, heightSetup / 3 + x, 165, 25);
     }
 
     private JLabel getCardsAddedSoFar() {

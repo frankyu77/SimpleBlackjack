@@ -11,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 
-//TODO: HANDLE IF USER ENTERS IN TOO MUCH MONEY ########################################################################
 public class BetGUI extends JFrame implements ActionListener {
     private final int widthSetup = 600;
     private final int heightSetup = 400;
@@ -33,20 +32,15 @@ public class BetGUI extends JFrame implements ActionListener {
         betMessage = new JLabel();
         amountBetted = new JTextField(10);
         beginButton = new JButton();
-
         player = p;
 
         //currentMoney label
-        currentMoney.setText("Current Balance: $" + player.getBalance());
-        currentMoney.setFont(new Font("Mononess", Font.PLAIN, 15));
-        currentMoney.setForeground(new Color(40, 40, 43));
-        currentMoney.setBounds(widthSetup / 2 - 110, heightSetup / 3 + 15, 250, 25);
+        setupLabelMessage(currentMoney, "Current Balance: $" + player.getBalance(), 15, 15,
+                250, 25);
 
         //betMessage label
-        betMessage.setText("How much would you like to bet?");
-        betMessage.setFont(new Font("Mononess", Font.PLAIN, 15));
-        betMessage.setForeground(new Color(40, 40, 43));
-        betMessage.setBounds(widthSetup / 2 - 110, heightSetup / 3 + 15, 350, 75);
+        setupLabelMessage(betMessage, "How much would you like to bet?", 15, 15,
+                350, 75);
         //amountbetted user input
         amountBetted.setBounds(widthSetup / 2 - 112, heightSetup / 3 + 70, 165, 25);
 
@@ -54,6 +48,19 @@ public class BetGUI extends JFrame implements ActionListener {
         beginButton = getBeginButton();
         beginButton.addActionListener(this);
 
+        setupFrame(image);
+        addEverythingToFrame();
+        frame.setVisible(true);
+    }
+
+    private void addEverythingToFrame() {
+        frame.add(currentMoney);
+        frame.add(betMessage);
+        frame.add(amountBetted);
+        frame.add(beginButton);
+    }
+
+    private void setupFrame(ImageIcon image) {
         frame.setTitle("Bet");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
@@ -62,13 +69,13 @@ public class BetGUI extends JFrame implements ActionListener {
         //color ****
         frame.setIconImage(image.getImage());
         frame.getContentPane().setBackground(new Color(196, 196, 199));
+    }
 
-        frame.add(currentMoney);
-        frame.add(betMessage);
-        frame.add(amountBetted);
-        frame.add(beginButton);
-
-        frame.setVisible(true);
+    private void setupLabelMessage(JLabel currentMoney, String player, int size, int size1, int width, int height) {
+        currentMoney.setText(player);
+        currentMoney.setFont(new Font("Mononess", Font.PLAIN, size));
+        currentMoney.setForeground(new Color(40, 40, 43));
+        currentMoney.setBounds(widthSetup / 2 - 110, heightSetup / 3 + size1, width, height);
     }
 
     private JButton getBeginButton() {
@@ -108,10 +115,7 @@ public class BetGUI extends JFrame implements ActionListener {
 
     private JLabel tryAgain() {
         JLabel label = new JLabel();
-        label.setText("You don't have that amount of money :p");
-        label.setFont(new Font("Mononess", Font.PLAIN, 8));
-        label.setForeground(new Color(40, 40, 43));
-        label.setBounds(widthSetup / 2 - 110, heightSetup / 3 + 50, 350, 100);
+        setupLabelMessage(label, "You don't have that amount of money :p", 8, 50, 350, 100);
         label.setBackground(Color.white);
         return label;
     }
