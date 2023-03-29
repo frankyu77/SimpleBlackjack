@@ -81,4 +81,33 @@ class DeckOfCardsTest {
         assertTrue(cards.getCardValue(3) == 10);
     }
 
+    @Test
+    void testRemoveCard() {
+        cards.addCard(two);
+        cards.addCard(three);
+        cards.addCard(four);
+        assertEquals(cards.getSize(), 3);
+
+        assertTrue(cards.getCard(0) == two);
+        assertTrue(cards.getCard(1) == three);
+        assertTrue(cards.getCard(2) == four);
+        assertTrue(cards.getCardName(0) == "2");
+        assertTrue(cards.getCardName(1) == "3");
+        assertTrue(cards.getCardName(2) == "4");
+        assertTrue(cards.getCardValue(0) == 2);
+        assertTrue(cards.getCardValue(1) == 3);
+        assertTrue(cards.getCardValue(2) == 4);
+
+        cards.removeCard(1);
+        assertEquals(cards.getSize(), 2);
+
+        assertTrue(cards.getCard(0) == two);
+        assertTrue(cards.getCard(1) == four);
+        assertTrue(cards.getCardName(0) == "2");
+        assertTrue(cards.getCardName(1) == "4");
+        assertTrue(cards.getCardValue(0) == 2);
+        assertTrue(cards.getCardValue(1) == 4);
+
+    }
+
 }

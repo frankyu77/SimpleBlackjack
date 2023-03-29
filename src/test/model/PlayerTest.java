@@ -120,5 +120,14 @@ class PlayerTest {
         assertEquals(player.betMade(5.42), 2.58);
     }
 
+    @Test
+    void testSetBet() {
+        player.setBet(10);
+        assertEquals(player.getBet(), 10);
+
+        player.setBet(13.5);
+        assertEquals(player.getBet(), 13.5);
+    }
+
 
 }
