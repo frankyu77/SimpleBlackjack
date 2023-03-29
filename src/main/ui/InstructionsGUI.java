@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+// the instructions page displaying how to play the game
 public class InstructionsGUI extends JFrame implements ActionListener {
     private final int width1 = 800;
     private final int height1 = 500;
@@ -15,6 +16,8 @@ public class InstructionsGUI extends JFrame implements ActionListener {
     JFrame frame;
     JButton back;
 
+    // MODIFIES: this
+    // EFFECTS: creates an instructions gui
     public InstructionsGUI() {
         title = new JLabel();
         instructions1 = new JTextArea(theInstructions1());
@@ -48,6 +51,8 @@ public class InstructionsGUI extends JFrame implements ActionListener {
         frame.setVisible(true);
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets up the frame for the instructions
     private void setupFrame() {
         frame.setTitle("Instructions");
         frame.setResizable(false);
@@ -57,6 +62,8 @@ public class InstructionsGUI extends JFrame implements ActionListener {
         frame.getContentPane().setBackground(new Color(81, 80, 77));
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds everything to the frame
     private void addEverythingToFrame() {
         frame.add(instructions3);
         frame.add(title);
@@ -65,15 +72,17 @@ public class InstructionsGUI extends JFrame implements ActionListener {
         frame.add(instructions2);
     }
 
-    private void setupInstructions(JTextArea instructions1, int y, int height) {
-        instructions1.setBounds(50, y, 700, height);
-        instructions1.setFont(new Font("Mononess", Font.PLAIN, 14));
-        instructions1.setBackground(new Color(81, 80, 77));
-        instructions1.setForeground(new Color(224, 225, 228));
-        instructions1.setLineWrap(true);
-        instructions1.setEditable(false);
+    // EFFECTS: sets up what label will look like for each instruction
+    private void setupInstructions(JTextArea instructions, int y, int height) {
+        instructions.setBounds(50, y, 700, height);
+        instructions.setFont(new Font("Mononess", Font.PLAIN, 14));
+        instructions.setBackground(new Color(81, 80, 77));
+        instructions.setForeground(new Color(224, 225, 228));
+        instructions.setLineWrap(true);
+        instructions.setEditable(false);
     }
 
+    // EFFECTS: first paragraph of instructions
     private String theInstructions1() {
         String words = "Black Jack is a game where you and the dealer are dealt 2 cards. From there your goal is to "
                 + "get"
@@ -87,6 +96,7 @@ public class InstructionsGUI extends JFrame implements ActionListener {
         return words;
     }
 
+    // EFFECTS: second paragraph of instructions
     private String theInstructions2() {
         String words = "In this game of Black Jack, everyone will start with $20. You can bet any amount of money, "
                 + "as long as \nyou have "
@@ -102,6 +112,7 @@ public class InstructionsGUI extends JFrame implements ActionListener {
         return words;
     }
 
+    // EFFECTS: third paragraph of instructions
     private String theInstructions3() {
         String words = "For this version of Blackjack, the player must set up their own deck by entering the value "
                 + "and the \ncorresponding face value of the card. Once the setup is done, the player will have the "
@@ -109,12 +120,16 @@ public class InstructionsGUI extends JFrame implements ActionListener {
         return words;
     }
 
+    // MODIFIES: this
+    // EFFECTS: creates a back button
     private JButton backButton() {
         JButton button = new JButton("Back");
         button.setBounds(10, height1 - 60, 80, 25);
         return button;
     }
 
+    // MODIFIES: this
+    // EFFECTS: if back button is pressed go back to main page gui
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == back) {

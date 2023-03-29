@@ -16,19 +16,22 @@ public class Dealer implements Writable {
     // MODIFIES: this
     // EFFECTS: creates a new dealer with the given hand
     public Dealer() {
-        //this.dealerCards = dealerHand;
         this.dealerCards = new ArrayList<>();
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets dealer hand to list of cards given
     public List<Card> setDealerHand(List<Card> dealerCards) {
         this.dealerCards = dealerCards;
         return this.dealerCards;
     }
 
+    // EFFECTS: returns card value at given index
     public int getCardValue(int index) {
         return this.dealerCards.get(index).getCardValue();
     }
 
+    // EFFECTS: returns card name at given index
     public String getCardName(int index) {
         return this.dealerCards.get(index).getCardName();
     }
@@ -44,6 +47,8 @@ public class Dealer implements Writable {
         return value;
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets value to given value
     public void setValue(int value) {
         this.value = value;
     }
@@ -66,6 +71,7 @@ public class Dealer implements Writable {
         return dealerCards;
     }
 
+    // EFFECTS: returns card at given index
     public Card getCard(int index) {
         return this.dealerCards.get(index);
     }
@@ -78,6 +84,7 @@ public class Dealer implements Writable {
         return json;
     }
 
+    // EFFECTS: returns dealerCards as a jsonArray
     private JSONArray cardsToJson() {
         JSONArray jsonArray = new JSONArray();
         for (Card c : dealerCards) {
@@ -85,9 +92,4 @@ public class Dealer implements Writable {
         }
         return jsonArray;
     }
-
-//    public List<Card> addCards(Card card) {
-//        this.dealerCards.add(card);
-//        return this.dealerCards;
-//    }
 }

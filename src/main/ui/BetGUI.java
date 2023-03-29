@@ -10,7 +10,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 
+// gui for the user to bet money
 public class BetGUI extends JFrame implements ActionListener {
     private final int widthSetup = 600;
     private final int heightSetup = 400;
@@ -24,6 +27,8 @@ public class BetGUI extends JFrame implements ActionListener {
     Player player;
     DeckOfCards cards;
 
+    // MODIFIES: this
+    // EFFECTS: sets up the page for the user to bet
     public BetGUI(DeckOfCards deck, Player p) {
         cards = deck;
         ImageIcon image = new ImageIcon("src/BlackJack.png");
@@ -53,6 +58,8 @@ public class BetGUI extends JFrame implements ActionListener {
         frame.setVisible(true);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds everything to the frame
     private void addEverythingToFrame() {
         frame.add(currentMoney);
         frame.add(betMessage);
@@ -60,6 +67,8 @@ public class BetGUI extends JFrame implements ActionListener {
         frame.add(beginButton);
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets up the frame
     private void setupFrame(ImageIcon image) {
         frame.setTitle("Bet");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -71,6 +80,8 @@ public class BetGUI extends JFrame implements ActionListener {
         frame.getContentPane().setBackground(new Color(196, 196, 199));
     }
 
+    // REQUIRES: size >= 0, width >= 0, height >= 0
+    // EFFECTS: creates a label to display a message
     private void setupLabelMessage(JLabel currentMoney, String player, int size, int size1, int width, int height) {
         currentMoney.setText(player);
         currentMoney.setFont(new Font("Mononess", Font.PLAIN, size));
@@ -78,16 +89,19 @@ public class BetGUI extends JFrame implements ActionListener {
         currentMoney.setBounds(widthSetup / 2 - 110, heightSetup / 3 + size1, width, height);
     }
 
+    // EFFECTS: creates a begin button
     private JButton getBeginButton() {
         JButton button = new JButton("Begin");
         button.setBounds(widthSetup - 100, heightSetup - 50, 100, 25);
         return button;
     }
 
+    // MODIFIES: player, this
+    // EFFECTS: handles what happens when each button is pressed
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == beginButton) {
-            double bet = Integer.parseInt(amountBetted.getText());
+            double bet = Double.parseDouble(amountBetted.getText());
 
             if (bet > player.getBalance()) {
                 amountBetted.setText("");
@@ -113,6 +127,7 @@ public class BetGUI extends JFrame implements ActionListener {
         }
     }
 
+    // EFFECTS: message to display when bet more than money you have
     private JLabel tryAgain() {
         JLabel label = new JLabel();
         setupLabelMessage(label, "You don't have that amount of money :p", 8, 50, 350, 100);

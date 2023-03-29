@@ -17,14 +17,6 @@ public class Game implements Writable {
     private Player player;
     private Dealer dealer;
 
-    // REQUIRES: cards.size() >= 4
-    // EFFECTS: creates game with the DeckOfCards inputted
-//    public Game(DeckOfCards cards, Player player, Dealer dealer) {
-//        this.deck = cards;
-//        this.player = player;
-//        this.dealer = dealer;
-//    }
-
     // EFFECTS: creates a new game
     public Game() {
         this.player = new Player();
@@ -41,7 +33,6 @@ public class Game implements Writable {
             }
         }
         this.player.setPlayerHand(player1);
-        //return this.player;
         return player1;
     }
 
@@ -54,7 +45,6 @@ public class Game implements Writable {
             }
         }
         this.dealer.setDealerHand(dealer1);
-        //return dealer;
         return dealer1;
     }
 
@@ -105,22 +95,30 @@ public class Game implements Writable {
         return this.deck;
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets player to given player
     public void setPlayer(Player player) {
         this.player = player;
     }
 
+    // EFFECTS: returns player
     public Player getPlayer() {
         return this.player;
     }
 
+    // EFFECTS: returns dealer
     public Dealer getDealer() {
         return this.dealer;
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets dealer to given dealer
     public void setDealer(Dealer dealer) {
         this.dealer = dealer;
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets deck to given deck
     public void setDeckOfCards(DeckOfCards deck1) {
         this.deck = deck1;
     }

@@ -43,21 +43,10 @@ public class DeckOfCards implements Writable {
         return cards.get(n).getCardValue();
     }
 
-
-
-//    private List<String> getDeckNames() {
-//        for (Card card: cards) {
-//            cardNames.add(card.getCardName());
-//        }
-//        return cardNames;
-//    }
-//
-//    private List<Integer> getDeckValues() {
-//        for (Card card: cards) {
-//            cardValues.add(card.getCardValue());
-//        }
-//        return cardValues;
-//    }
+    // EFFECTS: removes card from cards
+    public void removeCard(int n) {
+        this.cards.remove(n);
+    }
 
     @Override
     public JSONObject toJson() {
@@ -66,6 +55,7 @@ public class DeckOfCards implements Writable {
         return json;
     }
 
+    // EFFECTS: returns cards as a JSON array
     private JSONArray cardsToJson() {
         JSONArray jsonArray = new JSONArray();
         for (Card c : cards) {

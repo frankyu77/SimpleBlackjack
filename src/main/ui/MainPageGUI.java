@@ -3,7 +3,9 @@ package ui;
 import model.Dealer;
 import model.Game;
 import model.Player;
+import org.json.JSONObject;
 import persistence.JsonReader;
+import persistence.Writable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,6 +15,7 @@ import java.io.IOException;
 
 import static ui.User.JSON_STORE;
 
+// handles everything in the main gui
 public class MainPageGUI extends JFrame implements ActionListener {
     private final int width = 1000;
     private final int height = 600;
@@ -32,6 +35,8 @@ public class MainPageGUI extends JFrame implements ActionListener {
     private Dealer dealer;
     private int numberOfTimesHit;
 
+    // MODIFIES: this
+    // EFFECTS: setting up the welcome page for the game and creates the welcome page
     public MainPageGUI() {
         ImageIcon image = new ImageIcon("src/BlackJack.png");
         label = new JLabel();
@@ -69,6 +74,8 @@ public class MainPageGUI extends JFrame implements ActionListener {
         numberOfTimesHit = 0;
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds everything to the main page frame
     private void addEverythingToFrame() {
         frame.add(instButton);
         frame.add(beginButton);
@@ -77,6 +84,7 @@ public class MainPageGUI extends JFrame implements ActionListener {
         frame.add(label);
     }
 
+    // EFFECTS: sets up the buttons
     private void addButtons() {
         instButton = instructionsButton();
         instButton.addActionListener(this);
@@ -88,6 +96,7 @@ public class MainPageGUI extends JFrame implements ActionListener {
         loadMoney.addActionListener(this);
     }
 
+    // EFFECTS: sets up the title of the page
     private void setupTitle(ImageIcon newImg) {
         label.setIcon(newImg);
         label.setText("Welcome to Blackjack!");
@@ -100,30 +109,36 @@ public class MainPageGUI extends JFrame implements ActionListener {
         label.setHorizontalAlignment(JLabel.CENTER);
     }
 
+    // EFFECTS: creates instructions button
     public JButton instructionsButton() {
         JButton button = new JButton("Instructions");
         button.setBounds(width / 2 - 86, height / 2 + 150, 175, 50);
         return button;
     }
 
+    // EFFECTS: creates load game button
     public JButton loadGameButton() {
         JButton button = new JButton("Load Game");
         button.setBounds(width / 2 - 74, height / 2 + 90, 150, 50);
         return button;
     }
 
+    // EFFECTS: creates load money button
     public JButton getLoadMoneyButton() {
         JButton button = new JButton("Load Money");
         button.setBounds(width / 2 - 74, height / 2 + 30, 150, 50);
         return button;
     }
 
+    // EFFECTS: creates begin game button
     public JButton beginGameButton() {
         JButton button = new JButton("Begin Game");
         button.setBounds(width / 2 - 74, height / 2 - 30, 150, 50);
         return button;
     }
 
+    // MODIFIES: this
+    // EFFECTS: handles what happens when each button is pressed
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == instButton) {
@@ -147,6 +162,7 @@ public class MainPageGUI extends JFrame implements ActionListener {
         }
     }
 
+    // EFFECTS: small message to display that money has been loaded
     private JLabel moneyLoadedLabel() {
         JLabel label = new JLabel();
         label.setText("Money loaded :D");
@@ -157,6 +173,8 @@ public class MainPageGUI extends JFrame implements ActionListener {
         return label;
     }
 
+    // MODIFIES: this
+    // EFFECTS: loads workroom from file
     private void loadMoneyWorkRoom() {
         try {
             game = jsonReader.read();
@@ -171,6 +189,8 @@ public class MainPageGUI extends JFrame implements ActionListener {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: loads workroom from file
     private void loadWorkRoom() {
         try {
             game = jsonReader.read();
@@ -185,4 +205,5 @@ public class MainPageGUI extends JFrame implements ActionListener {
             System.out.println("Unable to read from file: " + JSON_STORE);
         }
     }
+
 }

@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 
 import static ui.User.*;
 
+// gui for the actual game
 public class GameGUI extends JFrame implements ActionListener {
     static final String JSON_MONEY = "./data/Money.json";
     private final int width = 1000;
@@ -48,7 +49,8 @@ public class GameGUI extends JFrame implements ActionListener {
     private int numberOfTimesHit = 3;
     private final int noMoney = 1;
 
-
+    // MODIFIES: this, game
+    // EFFECTS: sets up the game gui
     public GameGUI(DeckOfCards cards, Player p, Dealer d, Game g, int n) throws FileNotFoundException {
         deck = cards;
         player = p;
@@ -87,6 +89,8 @@ public class GameGUI extends JFrame implements ActionListener {
         jsonWriter = new JsonWriter(JSON_STORE);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds everything to the frame
     private void updateFrame() {
         gameFrame.add(playerPanel);
         gameFrame.add(dealerPanel);
@@ -97,6 +101,7 @@ public class GameGUI extends JFrame implements ActionListener {
     }
 
     //********************************************* CARD IMAGE *********************************************************
+    // EFFECTS: creates an image of the card
     private ImageIcon getCardImage() {
         ImageIcon card = new ImageIcon("src/card.png");
         //resizing image ****
@@ -107,6 +112,7 @@ public class GameGUI extends JFrame implements ActionListener {
     }
 
     //*********************************************** PLAYER PANEL *****************************************************
+    // EFFECTS: creates a panel for the player
     private JPanel getPlayerPanel(ImageIcon newImg, List<Card> pcards) {
         JLabel playerName = getTotalValue("Player", 30, 75, 0, 100);
         JLabel total = getTotalValue("Total: " + player.getValue(), 20, 250, 78, 100);
@@ -129,8 +135,8 @@ public class GameGUI extends JFrame implements ActionListener {
         return panel;
     }
 
-
     //************************************************ DEALER PANEL ****************************************************
+    // EFFECTS: creates a panel for the dealer
     private JPanel getDealerPanel(ImageIcon newImg, List<Card> dcards) {
         JLabel dealerName = new JLabel();
         dealerName.setText("Dealer");
@@ -156,6 +162,7 @@ public class GameGUI extends JFrame implements ActionListener {
     }
 
     //************************************************ SIMILAR FUNCTIONS ***********************************************
+    // EFFECTS: creates a label for each card that is dealt out
     private void addCardsToUserPanel(ImageIcon newImg, List<Card> pcards, JPanel panel) {
         for (int i = 0; i < pcards.size(); i++) {
             JLabel label = new JLabel();
@@ -169,6 +176,7 @@ public class GameGUI extends JFrame implements ActionListener {
         }
     }
 
+    // EFFECTS: creates a label to calculate total of the hand given
     private JLabel getTotalValue(String player, int size, int x, int y, int width) {
         JLabel total = new JLabel();
         total.setText(player);
@@ -179,113 +187,154 @@ public class GameGUI extends JFrame implements ActionListener {
     }
 
     //****************************************** BUTTONS ***************************************************************
+    // EFFECTS: creates a hit button
     private JButton getHitButton() {
         JButton button = new JButton("Hit");
         button.setBounds(width / 2 - 135, height - 50, 60, 25);
         return button;
     }
 
+    // EFFECTS: creates a stay button
     private JButton getStayButton() {
         JButton button = new JButton("Stay");
         button.setBounds(width / 2 - 75, height - 50, 60, 25);
         return button;
     }
 
+    // EFFECTS: creates a save button during the game
     private JButton getSaveButton() {
         JButton button = new JButton("Save");
         button.setBounds(width / 2 - 15, height - 50, 60, 25);
         return button;
     }
 
+    // EFFECTS: creates a save button in the end frame
     private JButton getBigSaveButton() {
         JButton button = new JButton("Save");
         button.setBounds(widthSmall / 2 - 37, heightSmall / 2, 75, 50);
         return button;
     }
 
+    // EFFECTS: creates a play again button
     private JButton getPlayAgainButton() {
         JButton button = new JButton("Play Again");
         button.setBounds(widthSmall / 2 - 50, heightSmall / 2 + 110, 100, 50);
         return button;
     }
 
+    // EFFECTS: creates a quit button
     private JButton getQuitButton() {
         JButton button = new JButton("Quit");
         button.setBounds(widthSmall / 2 - 37, heightSmall / 2 + 55, 75, 50);
         return button;
     }
 
-
     //************************************************ ACTION PERFORMED ************************************************
+    // MODIFIES: this, numberOfTimesHit, player
+    // EFFECTS: handles what happens when each button is pressed
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == hitButton) {
             numberOfTimesHit++;
-            if (numberOfTimesHit > game.getDeck().getSize() - 1) {
-                gameFrame.dispose();
-                deckTooSmallFrame = notEnoughCardsFrame();
-            } else {
-                player.playerHits(numberOfTimesHit, deck);
-                gameFrame.remove(playerPanel);
-                playerPanel = getPlayerPanel(getCardImage(), player.getPlayerHand());
-                gameFrame.add(playerPanel);
-                SwingUtilities.updateComponentTreeUI(gameFrame);
-                if (game.playerGreaterThan21(player)) {
-                    gameFrame.dispose();
-                    Color bkgColor = new Color(40, 40, 43);
-                    Color wordColor = new Color(220, 20, 60);
-                    if (player.getBalance() <= 0) {
-                        loseFrame = endFrame("No More Money :(", "No Money", bkgColor, wordColor, noMoney);
-                    } else {
-                        loseFrame = endFrame("You Lost", "Lose", bkgColor, wordColor, 0);
-                    }
-                }
-
-                System.out.println("Player hits!");
-            }
+            handlesWhenPlayerHits();
         } else if (e.getSource() == stayButton) {
-            while (dealer.getValue() <= 17) {
-                numberOfTimesHit++;
-                if (numberOfTimesHit > game.getDeck().getSize() - 1) {
-                    gameFrame.dispose();
-                    deckTooSmallFrame = notEnoughCardsFrame();
-                    break;
-                } else {
-                    dealer.dealerHits(numberOfTimesHit, deck);
-
-                    gameFrame.remove(dealerPanel);
-                    dealerPanel = getDealerPanel(getCardImage(), dealer.getDealerHand());
-                    gameFrame.add(dealerPanel);
-                    SwingUtilities.updateComponentTreeUI(gameFrame);
-                }
-            }
-            if (numberOfTimesHit < game.getDeck().getSize()) {
-                int n = game.whoWins(player, dealer);
-                handleWinLoseDraw(n);
-            }
+            handleDealersTurn();
+            handleWhoWinsIfEnoughCardsInDeck();
 
             System.out.println("Player stays!");
         } else if (e.getSource() == saveButton || e.getSource() == bigSaveButton) {
             disposeAllFrames();
-            try {
-                jsonWriter.open();
-                jsonWriter.write(game);
-                jsonWriter.close();
-                System.out.println("Saved deck to " + JSON_STORE);
-            } catch (FileNotFoundException fileNotFoundException) {
-                System.out.println("Unable to write to file: " + JSON_STORE);
-            }
+            saveToJSon();
         } else if (e.getSource() == quitButton) {
             disposeAllFrames();
             System.out.println("Quitting");
         } else if (e.getSource() == playAgainButton) {
             disposeAllFrames();
-
             SetupGUI setupGUI = new SetupGUI(player);
             System.out.println("Playing again");
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: handles when player hits
+    private void handlesWhenPlayerHits() {
+        if (numberOfTimesHit > game.getDeck().getSize() - 1) {
+            gameFrame.dispose();
+            deckTooSmallFrame = notEnoughCardsFrame();
+        } else {
+            updatePlayerHandWhenHit();
+            handleIfPlayerGoOver21();
+            System.out.println("Player hits!");
+        }
+    }
+
+    // EFFECTS: handles who wins
+    private void handleWhoWinsIfEnoughCardsInDeck() {
+        if (numberOfTimesHit < game.getDeck().getSize()) {
+            int n = game.whoWins(player, dealer);
+            handleWinLoseDraw(n);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: saves game to json file
+    private void saveToJSon() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(game);
+            jsonWriter.close();
+            System.out.println("Saved deck to " + JSON_STORE);
+        } catch (FileNotFoundException fileNotFoundException) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
+        }
+    }
+
+    // MODIFIES: this, player
+    // EFFECTS: updates the players hand when user hits
+    private void updatePlayerHandWhenHit() {
+        player.playerHits(numberOfTimesHit, deck);
+        gameFrame.remove(playerPanel);
+        playerPanel = getPlayerPanel(getCardImage(), player.getPlayerHand());
+        gameFrame.add(playerPanel);
+        SwingUtilities.updateComponentTreeUI(gameFrame);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: dispose frame if player gets over 21 and display end frame lose or no money
+    private void handleIfPlayerGoOver21() {
+        if (game.playerGreaterThan21(player)) {
+            gameFrame.dispose();
+            Color bkgColor = new Color(40, 40, 43);
+            Color wordColor = new Color(220, 20, 60);
+            if (player.getBalance() <= 0) {
+                loseFrame = endFrame("No More Money :(", "No Money", bkgColor, wordColor, noMoney);
+            } else {
+                loseFrame = endFrame("You Lost", "Lose", bkgColor, wordColor, 0);
+            }
+        }
+    }
+
+    // MODIFIES: this, dealer
+    // EFFECTS: handles when the dealers total is still less than 17
+    private void handleDealersTurn() {
+        while (dealer.getValue() <= 17) {
+            numberOfTimesHit++;
+            if (numberOfTimesHit > game.getDeck().getSize() - 1) {
+                gameFrame.dispose();
+                deckTooSmallFrame = notEnoughCardsFrame();
+                break;
+            } else {
+                dealer.dealerHits(numberOfTimesHit, deck);
+                gameFrame.remove(dealerPanel);
+                dealerPanel = getDealerPanel(getCardImage(), dealer.getDealerHand());
+                gameFrame.add(dealerPanel);
+                SwingUtilities.updateComponentTreeUI(gameFrame);
+            }
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: disposes all frames
     private void disposeAllFrames() {
         drawFrame.dispose();
         playerBJFrame.dispose();
@@ -297,6 +346,8 @@ public class GameGUI extends JFrame implements ActionListener {
     }
 
     //************************************** WIN/LOSE/DRAW FRAME *******************************************************
+    // MODIFIES: this, player
+    // EFFECTS: handles what happens when the player win/lose/draw/win bj/lose bj
     private void handleWinLoseDraw(int n) {
         if (n == DRAW) {
             player.playerMoney(n, player.getBet());
@@ -327,6 +378,7 @@ public class GameGUI extends JFrame implements ActionListener {
     }
 
     //************************************** NOT ENOUGH CARDS FRAME ****************************************************
+    // EFFECTS: frame to display when there are not enough cards
     private JFrame notEnoughCardsFrame() {
         JFrame noCardsFrame = new JFrame();
         JLabel frameStatement = new JLabel();
@@ -352,6 +404,7 @@ public class GameGUI extends JFrame implements ActionListener {
     }
 
     //********************************************* ENDING FRAME *******************************************************
+    // EFFECTS: ending frame to display after game is over
     private JFrame endFrame(String title, String frameTitle, Color back, Color front, int n) {
         JFrame frameEnd = new JFrame();
         JLabel frameStatement = new JLabel();
@@ -390,6 +443,7 @@ public class GameGUI extends JFrame implements ActionListener {
         return frameEnd;
     }
 
+    // EFFECTS: adds everything to the ending frame
     private void addEverythingToEndFrame(int n, JFrame frameEnd, JLabel frameStatement, JLabel moneyAfter,
                                          JLabel dealerAmount, JLabel playerAmount) {
         frameEnd.add(frameStatement);
@@ -403,6 +457,7 @@ public class GameGUI extends JFrame implements ActionListener {
         frameEnd.add(quitButton);
     }
 
+    // EFFECTS: sets up the ending frame
     private void setupEndFrame(JFrame frameEnd, String frameTitle, int widthSmall, int heightSmall,
                                Image iconImage, Color back) {
         frameEnd.setTitle(frameTitle);
@@ -415,6 +470,7 @@ public class GameGUI extends JFrame implements ActionListener {
         frameEnd.getContentPane().setBackground(back);
     }
 
+    // EFFECTS: template for the frame
     private void setupLabelTitles(JLabel frameStatement, String title, int y, Color front, int size) {
         frameStatement.setText(title);
         frameStatement.setBounds(0, y, widthSmall, heightSmall);
@@ -424,6 +480,8 @@ public class GameGUI extends JFrame implements ActionListener {
         frameStatement.setHorizontalAlignment(JLabel.CENTER);
     }
 
+    // MODIFIES: this
+    // EFFECTS: handles what happens when the first two cards dealt is a black jack
     private JFrame handleBlackJack(int n) {
         if (n == PBJ) {
             player.playerMoney(n, player.getBet());
@@ -447,6 +505,5 @@ public class GameGUI extends JFrame implements ActionListener {
             return new JFrame();
         }
     }
-
 
 }

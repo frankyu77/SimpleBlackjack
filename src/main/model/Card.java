@@ -9,6 +9,7 @@ public class Card implements Writable {
     private int cardValue;
 
     // REQUIRES: name.length() > 0, value >= 0
+    // MODIFIES: this
     // EFFECTS: creates a card with the given name and given value
     public Card(String name, int value) {
         this.cardName = name;

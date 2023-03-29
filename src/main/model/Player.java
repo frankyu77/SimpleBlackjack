@@ -24,9 +24,10 @@ public class Player implements Writable {
         this.money = 15;
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets the playerCards with given cards
     public void setPlayerHand(List<Card> playerCards) {
         this.playerCards = playerCards;
-        //return this.playerCards;
     }
 
     // MODIFIES: this
@@ -48,7 +49,7 @@ public class Player implements Writable {
     }
 
     // REQUIRES: n >= 0, amountBetted >= 0, current >= 0
-    // MODIFIES: this, current
+    // MODIFIES: this, money
     // EFFECTS: if player wins normally, then they win double the amount they bet, if they lose, they don't get the
     //          amount they bet back, if they draw, they just get the amount they bet back, if player hit blackjack,
     //          they win back 1.5x the amount that they bet
@@ -74,35 +75,46 @@ public class Player implements Writable {
         return this.money;
     }
 
+    // EFFECTS: return the player money
     public double getBalance() {
         return this.money;
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets the player money
     public double setMoney(double prevMoney) {
         this.money = prevMoney;
         return money;
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets the player bet amount
     public void setBet(double bet) {
         this.bet = bet;
     }
 
+    // EFFECTS: returns bet
     public double getBet() {
         return this.bet;
     }
 
+    // MODIFIES: this
+    // EFFECTS: set the value of the player hand
     public void setValue(int value) {
         this.value = value;
     }
 
+    // EFFECTS: return card at given index
     public Card getCard(int index) {
         return this.playerCards.get(index);
     }
 
+    // EFFECTS: returns card value at given index
     public int getCardValue(int index) {
         return this.playerCards.get(index).getCardValue();
     }
 
+    // EFFECTS: returns the card name at given index
     public String getCardName(int index) {
         return this.playerCards.get(index).getCardName();
     }
@@ -127,6 +139,7 @@ public class Player implements Writable {
         return json;
     }
 
+    // EFFECTS: returns playerCards as a JSON array
     private JSONArray cardsToJson() {
         JSONArray jsonArray = new JSONArray();
         for (Card c : this.playerCards) {
@@ -134,10 +147,5 @@ public class Player implements Writable {
         }
         return jsonArray;
     }
-
-//    public List<Card> addCard(Card card) {
-//        this.playerCards.add(card);
-//        return this.playerCards;
-//    }
 
 }
