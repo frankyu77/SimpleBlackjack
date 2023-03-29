@@ -69,6 +69,7 @@ public class User {
 
     }
 
+    // EFFECTS: prints out welcome message
     private void welcome() {
         System.out.println("--------------------------------------------------------------------------");
 
@@ -210,6 +211,7 @@ public class User {
         actualGame(completedDeck, playerCard1, dealerCard1);
     }
 
+    // EFFECTS: handles the action game
     private void actualGame(DeckOfCards completedDeck, List<Card> playerCard1, List<Card> dealerCard1) {
         while (true) {
             if (printDealerAndPlayerHand(playerCard1, dealerCard1, player, dealer, betStatement)) {
@@ -234,6 +236,8 @@ public class User {
         }
     }
 
+    // MODIFIES: numberOfTimesHit
+    // EFFECTS: handles user input if they want to hit, stay or save
     private String handleInputHitStaySave() {
         System.out.println("--------------------------------------------------------------------------");
         System.out.println("Do you want to 'hit' or 'stay' or 'save' and quit?");
@@ -273,7 +277,6 @@ public class User {
         }
     }
 
-    @SuppressWarnings("methodlength")
     // REQUIRES: completedDeck.size() >= 4, bet > 0
     // MODIFIES: this, currentMoney
     // EFFECTS: if there is not enough cards in the deck, end the game. If user hits, check if their value will be
@@ -288,9 +291,7 @@ public class User {
         } else if (response.equals("hit")) {
             p.playerHits(numberOfTimesHit, completedDeck);
             if (game.playerGreaterThan21(p)) {
-                printDealerAndPlayerHand(playerCard1, dealerCard1, p, d, bet);
-
-                lostStatementWithMoneyLost(p, bet);
+                handlePrintHandsAndLoseStatement(p, d, playerCard1, dealerCard1, bet);
 
                 return LOSE;
             }
@@ -298,12 +299,10 @@ public class User {
             if (dealersTurn(p, d, completedDeck, bet)) {
                 return LOSE;
             }
-            printDealerAndPlayerHand(playerCard1, dealerCard1, p, d, bet);
-            handleMoney(p, d, bet);
+            handlePrintHandsAndMoney(p, d, playerCard1, dealerCard1, bet);
             return LOSE;
         } else if (response.equals("save")) {
-            saveWorkRoom();
-            endGame();
+            handleSave();
             return 7;
         } else {
             return LOSE;
@@ -311,6 +310,27 @@ public class User {
         return WIN;
     }
 
+    // EFFECTS: handles saving the game
+    private void handleSave() {
+        saveWorkRoom();
+        endGame();
+    }
+
+    // EFFECTS: handles printing the dealer and player hands and the money
+    private void handlePrintHandsAndMoney(Player p, Dealer d, List<Card> playerCard1, List<Card> dealerCard1,
+                                          double bet) {
+        printDealerAndPlayerHand(playerCard1, dealerCard1, p, d, bet);
+        handleMoney(p, d, bet);
+    }
+
+    // EFFECTS: handles printing the dealer and player hands and losing statement
+    private void handlePrintHandsAndLoseStatement(Player p, Dealer d, List<Card> playerCard1, List<Card> dealerCard1,
+                                                  double bet) {
+        printDealerAndPlayerHand(playerCard1, dealerCard1, p, d, bet);
+        lostStatementWithMoneyLost(p, bet);
+    }
+
+    // EFFECTS: prints out end game
     private void endGame() {
         System.out.println("Thank you for playing!");
     }
