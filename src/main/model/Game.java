@@ -33,6 +33,7 @@ public class Game implements Writable {
             }
         }
         this.player.setPlayerHand(player1);
+        EventLog.getInstance().logEvent(new Event("First two Player cards dealt"));
         return player1;
     }
 
@@ -45,6 +46,7 @@ public class Game implements Writable {
             }
         }
         this.dealer.setDealerHand(dealer1);
+        EventLog.getInstance().logEvent(new Event("First two Dealer cards dealt"));
         return dealer1;
     }
 
@@ -52,14 +54,19 @@ public class Game implements Writable {
     public int whoWins(Player player, Dealer dealer) {
         if ((player.getSize() == 2 && player.getValue() == 21 && dealer.getSize() == 2 && dealer.getValue() == 21)
                 || (dealer.getValue() == player.getValue())) {
+            EventLog.getInstance().logEvent(new Event("Draw!"));
             return DRAW;
         } else if (player.getSize() == 2 && player.getValue() == 21) {
+            EventLog.getInstance().logEvent(new Event("Player wins blackjack!"));
             return PBJ;
         } else if (dealer.getSize() == 2 && dealer.getValue() == 21) {
+            EventLog.getInstance().logEvent(new Event("Dealer wins blackjack!"));
             return DBJ;
         } else if (playerGreaterThan21(player) || (dealer.getValue() > player.getValue() && dealer.getValue() <= 21)) {
+            EventLog.getInstance().logEvent(new Event("Player loses!"));
             return LOSE;
         } else {
+            EventLog.getInstance().logEvent(new Event("Player wins!"));
             return WIN;
         }
     }
@@ -85,6 +92,7 @@ public class Game implements Writable {
     //          true, else false
     public boolean notEnoughCardsInDeck(int n, DeckOfCards deck) {
         if (n >= deck.getSize()) {
+            EventLog.getInstance().logEvent(new Event("Not enough cards in deck"));
             return true;
         }
         return false;

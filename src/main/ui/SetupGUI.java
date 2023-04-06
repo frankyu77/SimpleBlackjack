@@ -169,7 +169,7 @@ public class SetupGUI extends JFrame implements ActionListener {
     // EFFECTS: button to begin game
     private JButton getBeginButton() {
         JButton button = new JButton("Begin");
-        button.setBounds(widthSetup - 100, heightSetup - 50, 100, 25);
+        button.setBounds(widthSetup - 100, heightSetup - 60, 100, 25);
         return button;
     }
 
@@ -199,15 +199,6 @@ public class SetupGUI extends JFrame implements ActionListener {
             SwingUtilities.updateComponentTreeUI(panel);
 
         } else if (e.getSource() == beginButton) {
-//            for (int i = 0; i < deck.getSize(); i++) {
-//                System.out.print(deck.getCardName(i) + ", ");
-//            }
-//            System.out.println();
-//            for (int i = 0; i < deck.getSize(); i++) {
-//                System.out.print(deck.getCardValue(i) + ", ");
-//            }
-//            System.out.println();
-
             handleIfDeckTooSmall();
         } else if (e.getSource() == undoButton) {
             deck.removeCard(deck.getSize() - 1);
@@ -228,7 +219,6 @@ public class SetupGUI extends JFrame implements ActionListener {
             panel.add(tryAgain());
             SwingUtilities.updateComponentTreeUI(panel);
         } else {
-            System.out.println("Betting Begins");
             frame.dispose();
             BetGUI betGUI = new BetGUI(deck, player);
         }

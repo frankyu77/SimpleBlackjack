@@ -58,6 +58,7 @@ public class Dealer implements Writable {
     // EFFECTS: adds the card in the deck at the given index to the hand of the dealer
     public List<Card> dealerHits(int numberOfTimesHit, DeckOfCards deck) {
         this.dealerCards.add(deck.getCard(numberOfTimesHit));
+        EventLog.getInstance().logEvent(new Event("Dealer hits"));
         return dealerCards;
     }
 

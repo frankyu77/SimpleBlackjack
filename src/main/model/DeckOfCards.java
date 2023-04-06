@@ -20,6 +20,7 @@ public class DeckOfCards implements Writable {
     // EFFECTS: adds the given card to the end of the deck
     public List<Card> addCard(Card card) {
         cards.add(card);
+        EventLog.getInstance().logEvent(new Event("Cards added to deck"));
         return this.cards;
     }
 
@@ -46,6 +47,7 @@ public class DeckOfCards implements Writable {
     // EFFECTS: removes card from cards
     public void removeCard(int n) {
         this.cards.remove(n);
+        EventLog.getInstance().logEvent(new Event("Card removed from deck"));
     }
 
     @Override

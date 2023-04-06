@@ -38,9 +38,12 @@ public class MainPageGUI extends JFrame implements ActionListener {
     // MODIFIES: this
     // EFFECTS: setting up the welcome page for the game and creates the welcome page
     public MainPageGUI() {
-        ImageIcon image = new ImageIcon("src/BlackJack.png");
         label = new JLabel();
         frame = new JFrame();
+    }
+
+    public void begin() {
+        ImageIcon image = new ImageIcon("src/BlackJack.png");
 
         //resizing image ****
         Image img = image.getImage();
@@ -142,17 +145,14 @@ public class MainPageGUI extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == instButton) {
-            System.out.println("Instructions");
             frame.dispose();
             InstructionsGUI instructionsGUI = new InstructionsGUI();
         } else if (e.getSource() == beginButton) {
-            System.out.println("Setup Begun");
             frame.dispose();
             SetupGUI setupGUI = new SetupGUI(player);
         } else if (e.getSource() == loadButton) {
             frame.dispose();
             loadWorkRoom();
-            System.out.println("Loaded Game");
         } else if (e.getSource() == loadMoney) {
             loadMoneyWorkRoom();
             moneyAdded = moneyLoadedLabel();

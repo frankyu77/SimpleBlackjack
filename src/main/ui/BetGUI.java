@@ -92,7 +92,7 @@ public class BetGUI extends JFrame implements ActionListener {
     // EFFECTS: creates a begin button
     private JButton getBeginButton() {
         JButton button = new JButton("Begin");
-        button.setBounds(widthSetup - 100, heightSetup - 50, 100, 25);
+        button.setBounds(widthSetup - 100, heightSetup - 60, 100, 25);
         return button;
     }
 
@@ -116,7 +116,6 @@ public class BetGUI extends JFrame implements ActionListener {
                 player.setPlayerHand(game.firstTwoPlayerCards());
                 dealer.setDealerHand(game.firstTwoDealerCards());
 
-                System.out.println("Game begun");
                 frame.dispose();
                 try {
                     GameGUI gameGUI = new GameGUI(cards, player, dealer, game, 3);

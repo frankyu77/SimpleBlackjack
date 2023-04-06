@@ -1,8 +1,12 @@
 package ui;
 
+import model.Event;
+import model.EventLog;
+
 public class Main {
     public static void main(String[] args) {
         MainPageGUI gui = new MainPageGUI();
+        gui.begin();
 
 //        try {
 //            User u = new User();
@@ -12,5 +16,9 @@ public class Main {
 //        } catch (FileNotFoundException e) {
 //            System.out.println("Unable to run application: file not found");
 //        }
+
+        for (Event e : EventLog.getInstance()) {
+            System.out.println(e.hashCode());
+        }
     }
 }

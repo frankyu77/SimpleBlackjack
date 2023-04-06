@@ -1,6 +1,7 @@
 package ui;
 
 import model.*;
+import model.Event;
 import persistence.JsonWriter;
 
 import java.io.FileNotFoundException;
@@ -17,10 +18,10 @@ import static ui.User.*;
 public class GameGUI extends JFrame implements ActionListener {
     static final String JSON_MONEY = "./data/Money.json";
     private final int width = 1000;
-    private final int height = 600;
+    private final int height = 610;
 
     private final int widthSmall = 600;
-    private final int heightSmall = 400;
+    private final int heightSmall = 410;
 
     private JsonWriter jsonWriter;
 
@@ -126,8 +127,6 @@ public class GameGUI extends JFrame implements ActionListener {
 
         addCardsToUserPanel(newImg, pcards, panel);
 
-        System.out.println(pcards.size());  //testing ******************************
-
         panel.add(playerName);
         panel.add(total);
         panel.add(balance);
@@ -153,8 +152,6 @@ public class GameGUI extends JFrame implements ActionListener {
         panel.setLayout(null);
 
         addCardsToUserPanel(newImg, dcards, panel);
-
-        System.out.println(dcards.size());  //testing ******************************
 
         panel.add(dealerName);
         panel.add(total);
@@ -190,21 +187,21 @@ public class GameGUI extends JFrame implements ActionListener {
     // EFFECTS: creates a hit button
     private JButton getHitButton() {
         JButton button = new JButton("Hit");
-        button.setBounds(width / 2 - 135, height - 50, 60, 25);
+        button.setBounds(width / 2 - 135, height - 60, 60, 25);
         return button;
     }
 
     // EFFECTS: creates a stay button
     private JButton getStayButton() {
         JButton button = new JButton("Stay");
-        button.setBounds(width / 2 - 75, height - 50, 60, 25);
+        button.setBounds(width / 2 - 75, height - 60, 60, 25);
         return button;
     }
 
     // EFFECTS: creates a save button during the game
     private JButton getSaveButton() {
         JButton button = new JButton("Save");
-        button.setBounds(width / 2 - 15, height - 50, 60, 25);
+        button.setBounds(width / 2 - 15, height - 60, 60, 25);
         return button;
     }
 
@@ -240,18 +237,21 @@ public class GameGUI extends JFrame implements ActionListener {
         } else if (e.getSource() == stayButton) {
             handleDealersTurn();
             handleWhoWinsIfEnoughCardsInDeck();
-
-            System.out.println("Player stays!");
         } else if (e.getSource() == saveButton || e.getSource() == bigSaveButton) {
             disposeAllFrames();
             saveToJSon();
         } else if (e.getSource() == quitButton) {
             disposeAllFrames();
-            System.out.println("Quitting");
+            /**
+             * PRINT OUT EVENT LOG *************************************************************************************
+             */
+            for (Event f : EventLog.getInstance()) {
+                System.out.println(f.getDescription());
+            }
+
         } else if (e.getSource() == playAgainButton) {
             disposeAllFrames();
             SetupGUI setupGUI = new SetupGUI(player);
-            System.out.println("Playing again");
         }
     }
 
@@ -264,7 +264,6 @@ public class GameGUI extends JFrame implements ActionListener {
         } else {
             updatePlayerHandWhenHit();
             handleIfPlayerGoOver21();
-            System.out.println("Player hits!");
         }
     }
 

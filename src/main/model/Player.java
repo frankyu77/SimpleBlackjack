@@ -45,6 +45,7 @@ public class Player implements Writable {
     // EFFECTS: adds the card in the deck at the given index to the hand of the player
     public List<Card> playerHits(int numberOfTimesHit, DeckOfCards deck) {
         this.playerCards.add(deck.getCard(numberOfTimesHit));
+        EventLog.getInstance().logEvent(new Event("Player hits"));
         return playerCards;
     }
 
@@ -72,6 +73,7 @@ public class Player implements Writable {
     // EFFECTS: returns the current money minus the bet made
     public double betMade(double bet) {
         this.money -= bet;
+        EventLog.getInstance().logEvent(new Event("Player bet made"));
         return this.money;
     }
 

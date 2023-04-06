@@ -133,7 +133,6 @@ public class InstructionsGUI extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == back) {
-            System.out.println("Back to main menu from instructions");
             frame.dispose();
             MainPageGUI mainPageGUI = new MainPageGUI();
         }
