@@ -1,9 +1,7 @@
 package ui;
 
-import model.Dealer;
-import model.DeckOfCards;
-import model.Game;
-import model.Player;
+import model.*;
+import model.Event;
 
 import javax.swing.*;
 import java.awt.*;
@@ -71,7 +69,18 @@ public class BetGUI extends JFrame implements ActionListener {
     // EFFECTS: sets up the frame
     private void setupFrame(ImageIcon image) {
         frame.setTitle("Bet");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                for (Event f : EventLog.getInstance()) {
+                    System.out.println(f.toString());
+                }
+                System.exit(0);
+            }
+        });
+
         frame.setResizable(false);
         frame.setSize(widthSetup, heightSetup);
         frame.setLayout(null);

@@ -135,6 +135,7 @@ public class InstructionsGUI extends JFrame implements ActionListener {
         if (e.getSource() == back) {
             frame.dispose();
             MainPageGUI mainPageGUI = new MainPageGUI();
+            mainPageGUI.begin();
         }
     }
 }

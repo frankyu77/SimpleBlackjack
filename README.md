@@ -78,3 +78,84 @@ essentially lead me to wanting to design a game similar to that.
     - one restriction to this is that you cannot press load game if you saved an instance of a game from the end frame
   - pressing **play again** will just bring you back to the setup page where you will be able to set up your deck again 
   but this time you will have the amount of money you ended with in the last round
+
+
+### Phase 4: Task 2
+/Users/frank/Library/Java/JavaVirtualMachines/corretto-11.0.17/Contents/Home/bin/java -javaagent:/Applications/IntelliJ IDEA CE.app/Contents/lib/idea_rt.jar=59756:/Applications/IntelliJ IDEA CE.app/Contents/bin -Dfile.encoding=UTF-8 -classpath /Users/frank/Documents/CPSC 210/project_q2l0q/out/production/Project-Starter:/Users/frank/Documents/CPSC 210/project_q2l0q/lib/json-20210307.jar ui.Main
+
+Sat Apr 08 14:39:19 PDT 2023 
+Cards added to deck
+
+Sat Apr 08 14:39:20 PDT 2023
+Cards added to deck
+
+Sat Apr 08 14:39:21 PDT 2023
+Cards added to deck
+
+Sat Apr 08 14:39:24 PDT 2023
+Cards added to deck
+
+Sat Apr 08 14:39:25 PDT 2023
+Cards added to deck
+
+Sat Apr 08 14:39:26 PDT 2023
+Cards added to deck
+
+Sat Apr 08 14:39:28 PDT 2023
+Cards added to deck
+
+Sat Apr 08 14:39:29 PDT 2023
+Cards added to deck
+
+Sat Apr 08 14:39:30 PDT 2023
+Cards added to deck
+
+Sat Apr 08 14:39:32 PDT 2023
+Cards added to deck
+
+Sat Apr 08 14:39:33 PDT 2023
+Cards added to deck
+
+Sat Apr 08 14:39:34 PDT 2023
+Cards added to deck
+
+Sat Apr 08 14:39:35 PDT 2023
+Cards added to deck
+
+Sat Apr 08 14:39:37 PDT 2023
+Card removed from deck
+
+Sat Apr 08 14:39:38 PDT 2023
+Card removed from deck
+
+Sat Apr 08 14:39:38 PDT 2023
+Card removed from deck
+
+Sat Apr 08 14:39:38 PDT 2023
+Card removed from deck
+
+Sat Apr 08 14:39:41 PDT 2023
+Player bet made
+
+Sat Apr 08 14:39:41 PDT 2023
+First two Player cards dealt
+
+Sat Apr 08 14:39:41 PDT 2023
+First two Dealer cards dealt
+
+Sat Apr 08 14:39:41 PDT 2023
+Player loses!
+
+Sat Apr 08 14:39:43 PDT 2023
+Player hits
+
+Sat Apr 08 14:39:43 PDT 2023
+Player hits
+
+Sat Apr 08 14:39:44 PDT 2023
+Dealer hits
+
+Sat Apr 08 14:39:44 PDT 2023
+Player loses!
+
+Process finished with exit code 0

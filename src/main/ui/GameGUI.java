@@ -4,13 +4,12 @@ import model.*;
 import model.Event;
 import persistence.JsonWriter;
 
+import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.util.List;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import static ui.User.*;
 
@@ -240,13 +239,13 @@ public class GameGUI extends JFrame implements ActionListener {
         } else if (e.getSource() == saveButton || e.getSource() == bigSaveButton) {
             disposeAllFrames();
             saveToJSon();
+            for (Event f : EventLog.getInstance()) {
+                System.out.println(f.toString());
+            }
         } else if (e.getSource() == quitButton) {
             disposeAllFrames();
-            /**
-             * PRINT OUT EVENT LOG *************************************************************************************
-             */
             for (Event f : EventLog.getInstance()) {
-                System.out.println(f.getDescription());
+                System.out.println(f.toString());
             }
 
         } else if (e.getSource() == playAgainButton) {
@@ -269,7 +268,7 @@ public class GameGUI extends JFrame implements ActionListener {
 
     // EFFECTS: handles who wins
     private void handleWhoWinsIfEnoughCardsInDeck() {
-        if (numberOfTimesHit < game.getDeck().getSize()) {
+        if (!game.notEnoughCardsInDeck(numberOfTimesHit, game.getDeck())) {
             int n = game.whoWins(player, dealer);
             handleWinLoseDraw(n);
         }
@@ -460,7 +459,18 @@ public class GameGUI extends JFrame implements ActionListener {
     private void setupEndFrame(JFrame frameEnd, String frameTitle, int widthSmall, int heightSmall,
                                Image iconImage, Color back) {
         frameEnd.setTitle(frameTitle);
-        frameEnd.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        frameEnd.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frameEnd.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                for (Event f : EventLog.getInstance()) {
+                    System.out.println(f.toString());
+                }
+                System.exit(0);
+            }
+        });
+
         frameEnd.setResizable(false);
         frameEnd.setSize(widthSmall, heightSmall);
         frameEnd.setLayout(null);

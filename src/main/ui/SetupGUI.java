@@ -1,13 +1,13 @@
 package ui;
 
-import model.Card;
-import model.DeckOfCards;
-import model.Player;
+import model.*;
+import model.Event;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 
 // gui for the user to set up the deck
 public class SetupGUI extends JFrame implements ActionListener {
@@ -83,11 +83,29 @@ public class SetupGUI extends JFrame implements ActionListener {
         undoButton.addActionListener(this);
     }
 
+    protected void processWindowEvent(WindowEvent e) {
+        super.processWindowEvent(e);
+        if (e.getID() == WindowEvent.WINDOW_CLOSING) {
+            System.exit(0);
+        }
+    }
+
     // MODIFIES: this
     // EFFECTS: setting up the frame for the setup page
     private void setupFrame(ImageIcon image) {
         frame.setTitle("Setup");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                for (Event f : EventLog.getInstance()) {
+                    System.out.println(f.toString());
+                }
+                System.exit(0);
+            }
+        });
+
         frame.setResizable(false);
         frame.setSize(widthSetup, heightSetup);
         frame.setLayout(null);

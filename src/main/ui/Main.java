@@ -17,8 +17,8 @@ public class Main {
 //            System.out.println("Unable to run application: file not found");
 //        }
 
-        for (Event e : EventLog.getInstance()) {
-            System.out.println(e.hashCode());
-        }
+//        for (Event e : EventLog.getInstance()) {
+//            e.toString();
+//        }
     }
 }
