@@ -159,3 +159,24 @@ Sat Apr 08 14:39:44 PDT 2023
 Player loses!
 
 Process finished with exit code 0
+
+- reason why "Player loses!" prints twice if because two calls are being made to game.whoWins() method. The first time 
+it is called is right after two cards have been dealt to the dealer and the player and checks whether either of them 
+hits a blackjack, else continue the game normally until the ending where it has to check who wins.
+
+### Phase 4: Task 3
+If I had more time to work on my project I would add a couple interfaces or abstract classes for the Player and 
+Dealer classes. There are a couple methods inside both those classes that are very similar and essentially are 
+repetitive, such as getting dealer/player hand, or setting dealer/player hand, etc. so adding an abstract class or an 
+interface will greatly reduce the amount of duplication of code in my project. Additionally, I think that I can also add 
+an abstract class to introduce another hierarchy for the GUI part of my project. There are a lot of duplication when 
+coming to creating a JFrame, JButton, JPanel, or JLabel, and having some sort of parent class that each of my GUI can 
+extend and just call the parent method to create all the GUI related code would greatly reduce the duplication. One 
+other refactoring that I would add to my 
+code would be to change the list of cards that the player and dealer have from type ArrayList to the object DeckOfCards
+that I created. This way the game, dealer, and player would essentially have their own deck of cards, and they can call
+the methods from the DeckOfCards class to perform whatever code they need to perform. The reason why I did not implement
+it in the first place was because I thought it might've been easier to use the methods in the ArrayList class to operate 
+on the list of Card, but the DeckOfCards has essentially the same methods, but has a bit more that are specialized
+towards an actual deck of cards. For example, if I were to get the integer value of the card in the player deck, instead
+of calling playerHand.get(i).getValue(), I can just call playerHand.getValue(i). 

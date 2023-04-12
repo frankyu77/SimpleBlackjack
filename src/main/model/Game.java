@@ -92,7 +92,6 @@ public class Game implements Writable {
     //          true, else false
     public boolean notEnoughCardsInDeck(int n, DeckOfCards deck) {
         if (n >= deck.getSize()) {
-            EventLog.getInstance().logEvent(new Event("Not enough cards in deck"));
             return true;
         }
         return false;
