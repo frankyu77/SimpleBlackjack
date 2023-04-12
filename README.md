@@ -160,7 +160,7 @@ Player loses!
 
 Process finished with exit code 0
 
-- reason why "Player loses!" prints twice if because two calls are being made to game.whoWins() method. The first time 
+- reason why "Player loses!" prints twice is because two calls are being made to game.whoWins() method. The first time 
 it is called is right after two cards have been dealt to the dealer and the player and checks whether either of them 
 hits a blackjack, else continue the game normally until the ending where it has to check who wins.
 
