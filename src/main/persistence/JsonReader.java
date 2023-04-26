@@ -11,7 +11,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Stream;
 
-// code taken from JsonSerializationDemo from Phase 2 by the 210 team!!
 // Represents a reader that reads game from JSON data stored in file
 public class JsonReader {
     private String source;

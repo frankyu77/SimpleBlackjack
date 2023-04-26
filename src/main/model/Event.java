@@ -3,7 +3,7 @@ package model;
 import java.util.Calendar;
 import java.util.Date;
 
-// Taken from AlarmSystem from Phase 4 provided by the CPSC 210 team
+// based off AlarmSystem created by the CPSC 210 team
 /**
  * Represents an alarm system event.
  */
